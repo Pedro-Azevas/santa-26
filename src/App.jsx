@@ -34,6 +34,7 @@ const POSICOES_MAPA = [
   { id: 23, local: 'EF', x: 72.2, y: 34.4 },
   { id: 24, local: 'EF', x: 76.7, y: 34.8 },
   { id: 25, local: 'EM', x: 35.0, y: 13.4 },
+  { id: 26, local: 'Ginásio', x: 25.0, y: 5.4 },
 ];
 
 function normalize(value) {
