@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ExternalLink, ZoomIn, ZoomOut } from 'lucide-react';
+import { ExternalLink, ZoomIn, ZoomOut, X } from 'lucide-react';
 
 const JSON_URL =
   'https://script.google.com/macros/s/AKfycbwBhHiWH7MTVLpRHQZ2pr48bo9n6C3V9IGcnQ2K0bZ3V-Zp5ewHgMJznE1yU-ns9I84/exec';
@@ -12,7 +12,7 @@ const POSICOES_MAPA = [
   { id: 2, local: 'EF', x: 15.8, y: 42.6 },
   { id: 3, local: 'EF', x: 15.8, y: 47.1 },
   { id: 4, local: 'EM', x: 28.9, y: 7.8 },
-  { id: 5, local: 'EM', x: 29.2, y: 14.8 },   // bingo / região superior
+  { id: 5, local: 'EM', x: 29.2, y: 14.8 },
   { id: 6, local: 'EM', x: 29.2, y: 22.0 },
   { id: 7, local: 'EM', x: 24.8, y: 67.6 },
   { id: 8, local: 'EM', x: 27.2, y: 67.6 },
@@ -30,9 +30,9 @@ const POSICOES_MAPA = [
   { id: 20, local: 'EF', x: 62.6, y: 27.3 },
   { id: 21, local: 'EM', x: 56.7, y: 39.7 },
   { id: 22, local: 'EM', x: 56.7, y: 45.0 },
-  { id: 23, local: 'EF', x: 72.2, y: 34.4 },  // ajustada
+  { id: 23, local: 'EF', x: 72.2, y: 34.4 },
   { id: 24, local: 'EF', x: 76.7, y: 34.8 },
-  { id: 25, local: 'EM', x: 35.0, y: 13.4 },  // nova barraca perto do bingo
+  { id: 25, local: 'EM', x: 35.0, y: 13.4 },
 ];
 
 function normalize(value) {
@@ -92,14 +92,14 @@ function BarracaMarker({ active }) {
   );
 }
 
-function PopupBarraca({ barraca }) {
+function PopupBarraca({ barraca, isMobile = false, onClose }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.96 }}
       transition={{ duration: 0.18 }}
-      className="popup"
+      className={isMobile ? 'popup popup-mobile' : 'popup'}
     >
       <div className="popup-head">
         <div>
@@ -107,7 +107,12 @@ function PopupBarraca({ barraca }) {
           <div className="popup-title">{barraca.nome}</div>
           <div className="popup-local">{barraca.local}</div>
         </div>
-        <div className="popup-id">{String(barraca.id).padStart(2, '0')}</div>
+
+        {isMobile ? (
+          <button type="button" className="popup-close" onClick={onClose} aria-label="Fechar">
+            <X size={18} />
+          </button>
+        ) : null}
       </div>
 
       <div className="popup-list">
@@ -154,10 +159,11 @@ export default function App() {
   const [error, setError] = useState('');
   const [mapZoom, setMapZoom] = useState(1);
   const [mapOffset, setMapOffset] = useState({ x: 0, y: 0 });
-
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOrigin, setDragOrigin] = useState({ x: 0, y: 0 });
+  const [tipoFiltro, setTipoFiltro] = useState('todos');
+  const [isMobilePopupOpen, setIsMobilePopupOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -219,14 +225,28 @@ export default function App() {
         remanescentesTotal: item.horarios.reduce((acc, h) => acc + h.remanescentes, 0),
       }))
       .sort((a, b) => {
+        const tipoDiff = normalize(a.tipo).localeCompare(normalize(b.tipo));
+        if (tipoDiff !== 0) return tipoDiff;
+
         const nameDiff = normalize(a.nome).localeCompare(normalize(b.nome));
         if (nameDiff !== 0) return nameDiff;
+
         return normalize(a.local).localeCompare(normalize(b.local));
       });
   }, [data]);
 
+  const tiposDisponiveis = useMemo(() => {
+    const tipos = [...new Set(barracas.map((item) => item.tipo).filter(Boolean))];
+    return tipos;
+  }, [barracas]);
+
+  const barracasFiltradas = useMemo(() => {
+    if (tipoFiltro === 'todos') return barracas;
+    return barracas.filter((item) => normalize(item.tipo) === normalize(tipoFiltro));
+  }, [barracas, tipoFiltro]);
+
   const activeKey = lockedKey || hoveredKey;
-  const activeBarraca = barracas.find((item) => item.key === activeKey) || null;
+  const activeBarraca = barracasFiltradas.find((item) => item.key === activeKey) || barracas.find((item) => item.key === activeKey) || null;
 
   function focusBarraca(barraca, zoom = 1.32) {
     const maxOffset = getMaxOffset(zoom);
@@ -246,12 +266,14 @@ export default function App() {
     if (lockedKey === barraca.key) {
       setLockedKey(null);
       setHoveredKey(null);
+      setIsMobilePopupOpen(false);
       resetMapa();
       return;
     }
 
     setLockedKey(barraca.key);
     setHoveredKey(barraca.key);
+    setIsMobilePopupOpen(true);
     focusBarraca(barraca);
   }
 
@@ -301,7 +323,6 @@ export default function App() {
 
     const dx = e.clientX - dragStart.x;
     const dy = e.clientY - dragStart.y;
-
     const sensitivity = 0.08;
 
     const nextX = dragOrigin.x + dx * sensitivity;
@@ -312,6 +333,21 @@ export default function App() {
 
   function handleMouseUp() {
     setIsDragging(false);
+  }
+
+  function closeMobilePopup() {
+    setLockedKey(null);
+    setHoveredKey(null);
+    setIsMobilePopupOpen(false);
+    resetMapa();
+  }
+
+  function handleChangeFiltro(tipo) {
+    setTipoFiltro(tipo);
+    setLockedKey(null);
+    setHoveredKey(null);
+    setIsMobilePopupOpen(false);
+    resetMapa();
   }
 
   return (
@@ -342,25 +378,49 @@ export default function App() {
         <div className="flags" />
 
         <section className="map-section">
-          <div className="map-toolbar">
-            <button type="button" className="map-tool" onClick={handleZoomIn}>
-              <ZoomIn size={16} />
-            </button>
-            <button type="button" className="map-tool" onClick={handleZoomOut}>
-              <ZoomOut size={16} />
-            </button>
-            <button
-              type="button"
-              className="map-tool reset"
-              onClick={() => {
-                setLockedKey(null);
-                setHoveredKey(null);
-                setIsDragging(false);
-                resetMapa();
-              }}
-            >
-              Resetar mapa
-            </button>
+          <div className="controls-bar">
+            <div className="filtros-wrap">
+              <button
+                type="button"
+                className={`filter-pill ${tipoFiltro === 'todos' ? 'is-active' : ''}`}
+                onClick={() => handleChangeFiltro('todos')}
+              >
+                Todos
+              </button>
+
+              {tiposDisponiveis.map((tipo) => (
+                <button
+                  key={tipo}
+                  type="button"
+                  className={`filter-pill ${normalize(tipoFiltro) === normalize(tipo) ? 'is-active' : ''}`}
+                  onClick={() => handleChangeFiltro(tipo)}
+                >
+                  {tipo}
+                </button>
+              ))}
+            </div>
+
+            <div className="map-toolbar">
+              <button type="button" className="map-tool" onClick={handleZoomIn} aria-label="Aumentar zoom">
+                <ZoomIn size={16} />
+              </button>
+              <button type="button" className="map-tool" onClick={handleZoomOut} aria-label="Diminuir zoom">
+                <ZoomOut size={16} />
+              </button>
+              <button
+                type="button"
+                className="map-tool reset"
+                onClick={() => {
+                  setLockedKey(null);
+                  setHoveredKey(null);
+                  setIsDragging(false);
+                  setIsMobilePopupOpen(false);
+                  resetMapa();
+                }}
+              >
+                Resetar mapa
+              </button>
+            </div>
           </div>
 
           <div className="map-frame">
@@ -379,7 +439,7 @@ export default function App() {
             >
               <img src={MAPA_URL} alt="Mapa da Festa Junina" className="map-image" />
 
-              {barracas.map((barraca) => {
+              {barracasFiltradas.map((barraca) => {
                 const isActive = barraca.key === activeKey;
 
                 return (
@@ -399,7 +459,10 @@ export default function App() {
                     >
                       <BarracaMarker active={isActive} />
                     </motion.button>
-                    <AnimatePresence>{isActive && <PopupBarraca barraca={barraca} />}</AnimatePresence>
+
+                    <div className="desktop-popup">
+                      <AnimatePresence>{isActive && <PopupBarraca barraca={barraca} />}</AnimatePresence>
+                    </div>
                   </div>
                 );
               })}
@@ -419,7 +482,7 @@ export default function App() {
 
           {!loading &&
             !error &&
-            barracas.map((barraca, index) => (
+            barracasFiltradas.map((barraca) => (
               <div
                 key={barraca.key}
                 className={`list-row ${barraca.key === activeKey ? 'is-active' : ''}`}
@@ -427,9 +490,7 @@ export default function App() {
                 onMouseLeave={handleRowLeave}
                 onClick={() => handleMarkerClick(barraca)}
               >
-                <div className="list-meta">
-                  {String(index + 1).padStart(2, '0')} {barraca.tipo}
-                </div>
+                <div className="list-meta">{barraca.tipo}</div>
 
                 <div className="list-name-block">
                   <div className="list-name">{barraca.nome}</div>
@@ -454,17 +515,13 @@ export default function App() {
                         href={item.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="chip chip-on"
+                        className={`chip ${status.classe}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {item.horario}
                       </a>
                     );
                   })}
-                </div>
-
-                <div className="list-arrow">
-                  <ArrowRight size={18} />
                 </div>
               </div>
             ))}
@@ -481,13 +538,17 @@ export default function App() {
             julianazevedo.com
           </a>
         </footer>
-
-        {activeBarraca && (
-          <div className="mobile-active">
-            Em destaque: {activeBarraca.nome} · {activeBarraca.local}
-          </div>
-        )}
       </main>
+
+      <AnimatePresence>
+        {isMobilePopupOpen && activeBarraca ? (
+          <div className="mobile-sheet-backdrop" onClick={closeMobilePopup}>
+            <div onClick={(e) => e.stopPropagation()}>
+              <PopupBarraca barraca={activeBarraca} isMobile onClose={closeMobilePopup} />
+            </div>
+          </div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }
