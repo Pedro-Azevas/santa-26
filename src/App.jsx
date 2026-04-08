@@ -11,9 +11,9 @@ const POSICOES_MAPA = [
   { id: 1, local: 'EM', x: 15.7, y: 38.1 },
   { id: 2, local: 'EF', x: 15.8, y: 42.6 },
   { id: 3, local: 'EF', x: 15.8, y: 47.1 },
-  { id: 4, local: 'EM', x: 31.0, y: 7.6 },
-  { id: 5, local: 'EM', x: 31.1, y: 17.1 },
-  { id: 6, local: 'EM', x: 31.1, y: 25.0 },
+  { id: 4, local: 'EM', x: 28.9, y: 7.8 },
+  { id: 5, local: 'EM', x: 29.2, y: 14.8 },
+  { id: 6, local: 'EM', x: 29.2, y: 22.0 },
   { id: 7, local: 'EM', x: 24.8, y: 67.6 },
   { id: 8, local: 'EM', x: 27.2, y: 67.6 },
   { id: 9, local: 'EM', x: 33.0, y: 69.3 },
@@ -30,8 +30,9 @@ const POSICOES_MAPA = [
   { id: 20, local: 'EF', x: 62.6, y: 27.3 },
   { id: 21, local: 'EM', x: 56.7, y: 39.7 },
   { id: 22, local: 'EM', x: 56.7, y: 45.0 },
-  { id: 23, local: 'EF', x: 73.5, y: 34.5 },
-  { id: 24, local: 'EF', x: 77.6, y: 34.9 },
+  { id: 23, local: 'EF', x: 72.2, y: 34.4 },
+  { id: 24, local: 'EF', x: 76.7, y: 34.8 },
+  { id: 25, local: 'EM', x: 35.0, y: 13.4 },
 ];
 
 function normalize(value) {
@@ -59,6 +60,10 @@ function getStatus(remanescentes) {
     return { texto: 'ÚLTIMA VAGA', classe: 'chip chip-warn', disponivel: true };
   }
   return { texto: `${remanescentes} vagas`, classe: 'chip chip-on', disponivel: true };
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
 }
 
 function BarracaMarker({ active }) {
@@ -207,9 +212,13 @@ export default function App() {
   const activeKey = lockedKey || hoveredKey;
   const activeBarraca = barracas.find((item) => item.key === activeKey) || null;
 
-  function focusBarraca(barraca) {
-    setMapZoom(1.35);
-    setMapOffset({ x: 50 - barraca.x, y: 50 - barraca.y });
+  function focusBarraca(barraca, zoom = 1.32) {
+    const maxOffset = ((zoom - 1) / zoom) * 50;
+    const nextX = clamp(50 - barraca.x, -maxOffset, maxOffset);
+    const nextY = clamp(50 - barraca.y, -maxOffset, maxOffset);
+
+    setMapZoom(zoom);
+    setMapOffset({ x: nextX, y: nextY });
   }
 
   function resetMapa() {
@@ -244,6 +253,20 @@ export default function App() {
     }
   }
 
+  function handleZoomIn() {
+    setMapZoom((prev) => Math.min(1.9, Number((prev + 0.12).toFixed(2))));
+  }
+
+  function handleZoomOut() {
+    setMapZoom((prev) => {
+      const next = Math.max(1, Number((prev - 0.12).toFixed(2)));
+      if (next === 1) {
+        setMapOffset({ x: 0, y: 0 });
+      }
+      return next;
+    });
+  }
+
   return (
     <div className="page">
       <main className="shell">
@@ -273,13 +296,21 @@ export default function App() {
 
         <section className="map-section">
           <div className="map-toolbar">
-            <button type="button" className="map-tool" onClick={() => setMapZoom((z) => Math.min(2, z + 0.12))}>
+            <button type="button" className="map-tool" onClick={handleZoomIn}>
               <ZoomIn size={16} />
             </button>
-            <button type="button" className="map-tool" onClick={() => setMapZoom((z) => Math.max(1, z - 0.12))}>
+            <button type="button" className="map-tool" onClick={handleZoomOut}>
               <ZoomOut size={16} />
             </button>
-            <button type="button" className="map-tool reset" onClick={() => { setLockedKey(null); setHoveredKey(null); resetMapa(); }}>
+            <button
+              type="button"
+              className="map-tool reset"
+              onClick={() => {
+                setLockedKey(null);
+                setHoveredKey(null);
+                resetMapa();
+              }}
+            >
               Resetar mapa
             </button>
           </div>
@@ -287,7 +318,11 @@ export default function App() {
           <div className="map-frame">
             <motion.div
               className="map-zoom-layer"
-              animate={{ scale: mapZoom, x: `${mapOffset.x}%`, y: `${mapOffset.y}%` }}
+              animate={{
+                scale: mapZoom,
+                x: `${mapOffset.x}%`,
+                y: `${mapOffset.y}%`,
+              }}
               transition={{ type: 'spring', stiffness: 180, damping: 24 }}
             >
               <img src={MAPA_URL} alt="Mapa da Festa Junina" className="map-image" />
