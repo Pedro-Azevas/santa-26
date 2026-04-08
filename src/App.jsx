@@ -34,7 +34,8 @@ const POSICOES_MAPA = [
   { id: 23, local: 'EF', x: 72.2, y: 34.4 },
   { id: 24, local: 'EF', x: 76.7, y: 34.8 },
   { id: 25, local: 'EM', x: 35.0, y: 13.4 },
-  { id: 26, local: 'Ginásio', x: 25.0, y: 5.4 },
+  { id: 26, local: 'ginásio', x: 38.5, y: 15.0 },
+  { id: 27, local: 'viveiro', x: 57.6, y: 12.8 },
 ];
 
 function normalize(value) {
@@ -105,7 +106,7 @@ function PopupBarraca({ barraca, isMobile = false, onClose }) {
     >
       <div className="popup-head">
         <div>
-          <div className="popup-type">{barraca.tipo}</div>
+          <div className="popup-type">{barraca.tipo || 'Barraca'}</div>
           <div className="popup-title">{barraca.nome}</div>
           <div className="popup-local">{barraca.local}</div>
         </div>
@@ -191,43 +192,59 @@ export default function App() {
 
     for (const row of data) {
       const id = Number(row.ID_BARRACA);
-      const local = String(row.LOCAL ?? '');
-      const key = `${id}-${local}`;
+      const nome = String(row.NOME ?? '').trim();
+      const local = String(row.LOCAL ?? '').trim();
+      const tipo = String(row.TIPO ?? '').trim();
 
-      const pos = POSICOES_MAPA.find(
-        (item) => Number(item.id) === id && normalize(item.local) === normalize(local)
-      );
+      const horario = String(row['HORÁRIO'] ?? row.HORARIO ?? '').trim();
+      const link = String(row.LINK_FORMS ?? '').trim();
+
+      const hasValidIdentity = nome !== '' && local !== '';
+      if (!hasValidIdentity) continue;
+
+      const key = `${id || ''}-${normalize(nome)}-${normalize(local)}`;
+
+      const pos =
+        POSICOES_MAPA.find(
+          (item) =>
+            Number(item.id) === id &&
+            normalize(item.local) === normalize(local)
+        ) ||
+        POSICOES_MAPA.find((item) => Number(item.id) === id);
 
       if (!grouped.has(key)) {
         grouped.set(key, {
           id,
           key,
-          nome: row.NOME || 'Barraca',
+          nome,
           local,
-          tipo: row.TIPO || 'Barraca',
+          tipo,
           x: pos?.x ?? 50,
           y: pos?.y ?? 50,
           horarios: [],
         });
       }
 
-      grouped.get(key).horarios.push({
-        horario: row['HORÁRIO'] || row.HORARIO || '',
-        solicitados: toNumber(row.VAGAS_TOTAL ?? row.SOLICITADOS),
-        inscritos: toNumber(row.INSCRITOS),
-        remanescentes: toNumber(row.REMANESCENTES),
-        link: row.LINK_FORMS || '',
-      });
+      if (horario !== '') {
+        grouped.get(key).horarios.push({
+          horario,
+          solicitados: toNumber(row.VAGAS_TOTAL ?? row.SOLICITADOS),
+          inscritos: toNumber(row.INSCRITOS),
+          remanescentes: toNumber(row.REMANESCENTES),
+          link,
+        });
+      }
     }
 
     return [...grouped.values()]
+      .filter((item) => item.nome && item.local)
       .map((item) => ({
         ...item,
         horarios: item.horarios.sort(sortHorario),
         remanescentesTotal: item.horarios.reduce((acc, h) => acc + h.remanescentes, 0),
       }))
       .sort((a, b) => {
-        const tipoDiff = normalize(a.tipo).localeCompare(normalize(b.tipo));
+        const tipoDiff = normalize(a.tipo || 'zzz').localeCompare(normalize(b.tipo || 'zzz'));
         if (tipoDiff !== 0) return tipoDiff;
 
         const nameDiff = normalize(a.nome).localeCompare(normalize(b.nome));
@@ -238,13 +255,15 @@ export default function App() {
   }, [data]);
 
   const tiposDisponiveis = useMemo(() => {
-    const tipos = [...new Set(barracas.map((item) => item.tipo).filter(Boolean))];
-    return tipos;
+    return [...new Set(barracas.map((item) => item.tipo).filter((tipo) => String(tipo).trim() !== ''))];
   }, [barracas]);
 
   const barracasFiltradas = useMemo(() => {
-    if (tipoFiltro === 'todos') return barracas;
-    return barracas.filter((item) => normalize(item.tipo) === normalize(tipoFiltro));
+    const base = barracas.filter((item) => item.nome && item.local);
+
+    if (tipoFiltro === 'todos') return base;
+
+    return base.filter((item) => normalize(item.tipo) === normalize(tipoFiltro));
   }, [barracas, tipoFiltro]);
 
   const activeKey =
@@ -499,7 +518,7 @@ export default function App() {
                 onMouseLeave={handleRowLeave}
                 onClick={() => handleMarkerClick(barraca)}
               >
-                <div className="list-meta">{barraca.tipo}</div>
+                <div className="list-meta">{barraca.tipo || 'Barraca'}</div>
 
                 <div className="list-name-block">
                   <div className="list-name">{barraca.nome}</div>
@@ -507,30 +526,34 @@ export default function App() {
                 </div>
 
                 <div className="chips-wrap">
-                  {barraca.horarios.map((item) => {
-                    const status = getStatus(item.remanescentes);
+                  {barraca.horarios.length > 0 ? (
+                    barraca.horarios.map((item) => {
+                      const status = getStatus(item.remanescentes);
 
-                    if (!status.disponivel || !item.link) {
+                      if (!status.disponivel || !item.link) {
+                        return (
+                          <span key={`${barraca.key}-${item.horario}`} className="chip chip-off">
+                            {item.horario}
+                          </span>
+                        );
+                      }
+
                       return (
-                        <span key={`${barraca.key}-${item.horario}`} className="chip chip-off">
+                        <a
+                          key={`${barraca.key}-${item.horario}`}
+                          href={item.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={`chip ${status.classe}`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           {item.horario}
-                        </span>
+                        </a>
                       );
-                    }
-
-                    return (
-                      <a
-                        key={`${barraca.key}-${item.horario}`}
-                        href={item.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`chip ${status.classe}`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {item.horario}
-                      </a>
-                    );
-                  })}
+                    })
+                  ) : (
+                    <span className="chip chip-off">Sem horários</span>
+                  )}
                 </div>
               </div>
             ))}
