@@ -120,24 +120,25 @@ button { font: inherit; }
 }
 .marker-glow.is-active { background: rgba(255,255,255,.85); }
 
-.marker-dot {
-  position: relative;
-  width: 32px;
-  height: 32px;
+.marker-hitbox {
+  width: 40px;
+  height: 40px;
+  background: transparent;
   border-radius: 999px;
-  border: 2px solid #fff;
-  background: #6b7280;
-  box-shadow: 0 8px 22px rgba(0,0,0,.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  cursor: pointer;
 }
 
-.marker-dot-inner {
-  width: 10px;
-  height: 10px;
+.marker-highlight {
+  position: absolute;
+  inset: -10px;
   border-radius: 999px;
-  background: #fff;
+  background: transparent;
+  transition: 0.2s ease;
+}
+
+.marker-highlight.is-active {
+  background: rgba(0, 200, 255, 0.25);
+  box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.6);
 }
 
 .popup {
