@@ -92,6 +92,13 @@ button { font: inherit; }
   border: 1px solid #c7c0b8;
   background: #d6d2cc;
   padding: 14px;
+  overflow: hidden;
+}
+
+.map-zoom-layer {
+  position: relative;
+  transform-origin: center center;
+  will-change: transform;
 }
 
 .map-image { display: block; width: 100%; height: auto; }
@@ -121,8 +128,8 @@ button { font: inherit; }
 .marker-glow.is-active { background: rgba(255,255,255,.85); }
 
 .marker-hitbox {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   background: transparent;
   border-radius: 999px;
   cursor: pointer;
@@ -130,15 +137,15 @@ button { font: inherit; }
 
 .marker-highlight {
   position: absolute;
-  inset: -10px;
+  inset: -6px;
   border-radius: 999px;
   background: transparent;
   transition: 0.2s ease;
 }
 
 .marker-highlight.is-active {
-  background: rgba(0, 200, 255, 0.25);
-  box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.6);
+  background: rgba(0, 200, 255, 0.18);
+  box-shadow: 0 0 0 1.5px rgba(0, 200, 255, 0.55);
 }
 
 .popup {
