@@ -106,7 +106,7 @@ function PopupBarraca({ barraca, isMobile = false, onClose }) {
     >
       <div className="popup-head">
         <div>
-          <div className="popup-type">{barraca.tipo || 'Barraca'}</div>
+          <div className="popup-type">{barraca.tipo || ''}</div>
           <div className="popup-title">{barraca.nome}</div>
           <div className="popup-local">{barraca.local}</div>
         </div>
@@ -119,7 +119,7 @@ function PopupBarraca({ barraca, isMobile = false, onClose }) {
       </div>
 
       <div className="popup-list">
-        {barraca.horarios.length === 0 && <div className="popup-empty">Nenhum horário disponível.</div>}
+        {barraca.horarios.length === 0 && <div className="popup-empty">Sem horários</div>}
 
         {barraca.horarios.map((item) => {
           const status = getStatus(item.remanescentes);
@@ -195,14 +195,14 @@ export default function App() {
       const nome = String(row.NOME ?? '').trim();
       const local = String(row.LOCAL ?? '').trim();
       const tipo = String(row.TIPO ?? '').trim();
-
       const horario = String(row['HORÁRIO'] ?? row.HORARIO ?? '').trim();
       const link = String(row.LINK_FORMS ?? '').trim();
 
-      const hasValidIdentity = nome !== '' && local !== '';
-      if (!hasValidIdentity) continue;
+      // FILTRO REAL
+      if (!nome || !local) continue;
+      if (!id || Number.isNaN(id)) continue;
 
-      const key = `${id || ''}-${normalize(nome)}-${normalize(local)}`;
+      const key = `${id}-${normalize(nome)}-${normalize(local)}`;
 
       const pos =
         POSICOES_MAPA.find(
@@ -225,7 +225,7 @@ export default function App() {
         });
       }
 
-      if (horario !== '') {
+      if (horario) {
         grouped.get(key).horarios.push({
           horario,
           solicitados: toNumber(row.VAGAS_TOTAL ?? row.SOLICITADOS),
@@ -237,14 +237,16 @@ export default function App() {
     }
 
     return [...grouped.values()]
-      .filter((item) => item.nome && item.local)
+      .filter((item) => item.id && item.nome && item.local)
       .map((item) => ({
         ...item,
         horarios: item.horarios.sort(sortHorario),
         remanescentesTotal: item.horarios.reduce((acc, h) => acc + h.remanescentes, 0),
       }))
       .sort((a, b) => {
-        const tipoDiff = normalize(a.tipo || 'zzz').localeCompare(normalize(b.tipo || 'zzz'));
+        const tipoA = a.tipo || 'zzz';
+        const tipoB = b.tipo || 'zzz';
+        const tipoDiff = normalize(tipoA).localeCompare(normalize(tipoB));
         if (tipoDiff !== 0) return tipoDiff;
 
         const nameDiff = normalize(a.nome).localeCompare(normalize(b.nome));
@@ -259,11 +261,8 @@ export default function App() {
   }, [barracas]);
 
   const barracasFiltradas = useMemo(() => {
-    const base = barracas.filter((item) => item.nome && item.local);
-
-    if (tipoFiltro === 'todos') return base;
-
-    return base.filter((item) => normalize(item.tipo) === normalize(tipoFiltro));
+    if (tipoFiltro === 'todos') return barracas;
+    return barracas.filter((item) => normalize(item.tipo) === normalize(tipoFiltro));
   }, [barracas, tipoFiltro]);
 
   const activeKey =
@@ -518,7 +517,7 @@ export default function App() {
                 onMouseLeave={handleRowLeave}
                 onClick={() => handleMarkerClick(barraca)}
               >
-                <div className="list-meta">{barraca.tipo || 'Barraca'}</div>
+                <div className="list-meta">{barraca.tipo || ''}</div>
 
                 <div className="list-name-block">
                   <div className="list-name">{barraca.nome}</div>
