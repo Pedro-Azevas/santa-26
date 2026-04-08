@@ -6,6 +6,7 @@ const JSON_URL =
   'https://script.google.com/macros/s/AKfycbwBhHiWH7MTVLpRHQZ2pr48bo9n6C3V9IGcnQ2K0bZ3V-Zp5ewHgMJznE1yU-ns9I84/exec';
 
 const MAPA_URL = '/mapa-festa.jpeg';
+const HERO_URL = '/hero-festa-pb.jpg';
 
 const POSICOES_MAPA = [
   { id: 1, local: 'EM', x: 15.7, y: 38.1 },
@@ -245,8 +246,15 @@ export default function App() {
     return barracas.filter((item) => normalize(item.tipo) === normalize(tipoFiltro));
   }, [barracas, tipoFiltro]);
 
-  const activeKey = lockedKey || hoveredKey;
-  const activeBarraca = barracasFiltradas.find((item) => item.key === activeKey) || barracas.find((item) => item.key === activeKey) || null;
+  const activeKey =
+    barracasFiltradas.some((item) => item.key === (lockedKey || hoveredKey))
+      ? lockedKey || hoveredKey
+      : null;
+
+  const activeBarraca =
+    barracasFiltradas.find((item) => item.key === activeKey) ||
+    barracas.find((item) => item.key === activeKey) ||
+    null;
 
   function focusBarraca(barraca, zoom = 1.32) {
     const maxOffset = getMaxOffset(zoom);
@@ -371,7 +379,7 @@ export default function App() {
           </div>
 
           <div className="hero-right">
-            <div className="hero-photo" />
+            <img src={HERO_URL} alt="Foto da festa junina" className="hero-photo-image" />
           </div>
         </section>
 
