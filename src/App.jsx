@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { ArrowRight, ExternalLink, ZoomIn, ZoomOut } from 'lucide-react';
 
 const JSON_URL =
   'https://script.google.com/macros/s/AKfycbwBhHiWH7MTVLpRHQZ2pr48bo9n6C3V9IGcnQ2K0bZ3V-Zp5ewHgMJznE1yU-ns9I84/exec';
@@ -64,14 +64,13 @@ function getStatus(remanescentes) {
 function BarracaMarker({ active }) {
   return (
     <motion.div
-      animate={{ scale: active ? 1.08 : 1, y: active ? -2 : 0 }}
-      transition={{ type: 'spring', stiffness: 320, damping: 20 }}
+      animate={{ scale: active ? 1.06 : 1 }}
+      transition={{ type: 'spring', stiffness: 320, damping: 22 }}
       className="marker-wrap"
     >
       <span className={`marker-glow ${active ? 'is-active' : ''}`} />
-      <div className="marker-dot">
-        <div className="marker-dot-inner" />
-      </div>
+      <span className={`marker-highlight ${active ? 'is-active' : ''}`} />
+      <div className="marker-hitbox" />
     </motion.div>
   );
 }
@@ -79,9 +78,9 @@ function BarracaMarker({ active }) {
 function PopupBarraca({ barraca }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+      initial={{ opacity: 0, y: 10, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+      exit={{ opacity: 0, y: 10, scale: 0.96 }}
       transition={{ duration: 0.18 }}
       className="popup"
     >
@@ -132,9 +131,12 @@ function PopupBarraca({ barraca }) {
 
 export default function App() {
   const [data, setData] = useState([]);
-  const [activeKey, setActiveKey] = useState(null);
+  const [hoveredKey, setHoveredKey] = useState(null);
+  const [lockedKey, setLockedKey] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [mapZoom, setMapZoom] = useState(1);
+  const [mapOffset, setMapOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     async function load() {
@@ -202,7 +204,45 @@ export default function App() {
       });
   }, [data]);
 
+  const activeKey = lockedKey || hoveredKey;
   const activeBarraca = barracas.find((item) => item.key === activeKey) || null;
+
+  function focusBarraca(barraca) {
+    setMapZoom(1.35);
+    setMapOffset({ x: 50 - barraca.x, y: 50 - barraca.y });
+  }
+
+  function resetMapa() {
+    setMapZoom(1);
+    setMapOffset({ x: 0, y: 0 });
+  }
+
+  function handleMarkerClick(barraca) {
+    if (lockedKey === barraca.key) {
+      setLockedKey(null);
+      setHoveredKey(null);
+      resetMapa();
+      return;
+    }
+
+    setLockedKey(barraca.key);
+    setHoveredKey(barraca.key);
+    focusBarraca(barraca);
+  }
+
+  function handleRowEnter(barraca) {
+    if (!lockedKey) {
+      setHoveredKey(barraca.key);
+      focusBarraca(barraca);
+    }
+  }
+
+  function handleRowLeave() {
+    if (!lockedKey) {
+      setHoveredKey(null);
+      resetMapa();
+    }
+  }
 
   return (
     <div className="page">
@@ -232,27 +272,51 @@ export default function App() {
         <div className="flags" />
 
         <section className="map-section">
+          <div className="map-toolbar">
+            <button type="button" className="map-tool" onClick={() => setMapZoom((z) => Math.min(2, z + 0.12))}>
+              <ZoomIn size={16} />
+            </button>
+            <button type="button" className="map-tool" onClick={() => setMapZoom((z) => Math.max(1, z - 0.12))}>
+              <ZoomOut size={16} />
+            </button>
+            <button type="button" className="map-tool reset" onClick={() => { setLockedKey(null); setHoveredKey(null); resetMapa(); }}>
+              Resetar mapa
+            </button>
+          </div>
+
           <div className="map-frame">
-            <img src={MAPA_URL} alt="Mapa da Festa Junina" className="map-image" />
+            <motion.div
+              className="map-zoom-layer"
+              animate={{ scale: mapZoom, x: `${mapOffset.x}%`, y: `${mapOffset.y}%` }}
+              transition={{ type: 'spring', stiffness: 180, damping: 24 }}
+            >
+              <img src={MAPA_URL} alt="Mapa da Festa Junina" className="map-image" />
 
-            {barracas.map((barraca) => {
-              const isActive = barraca.key === activeKey;
+              {barracas.map((barraca) => {
+                const isActive = barraca.key === activeKey;
 
-              return (
-                <div
-                  key={barraca.key}
-                  className="marker-anchor"
-                  style={{ left: `${barraca.x}%`, top: `${barraca.y}%` }}
-                  onMouseEnter={() => setActiveKey(barraca.key)}
-                  onMouseLeave={() => setActiveKey(null)}
-                >
-                  <button type="button" className="marker-btn" aria-label={`${barraca.nome} ${barraca.local}`}>
-                    <BarracaMarker active={isActive} />
-                  </button>
-                  <AnimatePresence>{isActive && <PopupBarraca barraca={barraca} />}</AnimatePresence>
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={barraca.key}
+                    className="marker-anchor"
+                    style={{ left: `${barraca.x}%`, top: `${barraca.y}%` }}
+                    onMouseEnter={() => !lockedKey && setHoveredKey(barraca.key)}
+                    onMouseLeave={() => !lockedKey && setHoveredKey(null)}
+                  >
+                    <motion.button
+                      type="button"
+                      className="marker-btn"
+                      aria-label={`${barraca.nome} ${barraca.local}`}
+                      onClick={() => handleMarkerClick(barraca)}
+                      whileTap={{ scale: 0.96 }}
+                    >
+                      <BarracaMarker active={isActive} />
+                    </motion.button>
+                    <AnimatePresence>{isActive && <PopupBarraca barraca={barraca} />}</AnimatePresence>
+                  </div>
+                );
+              })}
+            </motion.div>
           </div>
         </section>
 
@@ -272,8 +336,9 @@ export default function App() {
               <div
                 key={barraca.key}
                 className={`list-row ${barraca.key === activeKey ? 'is-active' : ''}`}
-                onMouseEnter={() => setActiveKey(barraca.key)}
-                onMouseLeave={() => setActiveKey(null)}
+                onMouseEnter={() => handleRowEnter(barraca)}
+                onMouseLeave={handleRowLeave}
+                onClick={() => handleMarkerClick(barraca)}
               >
                 <div className="list-meta">
                   {String(index + 1).padStart(2, '0')} {barraca.tipo}
@@ -303,6 +368,7 @@ export default function App() {
                         target="_blank"
                         rel="noreferrer"
                         className="chip chip-on"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         {item.horario}
                       </a>
