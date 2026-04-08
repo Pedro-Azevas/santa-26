@@ -12,7 +12,7 @@ const POSICOES_MAPA = [
   { id: 2, local: 'EF', x: 15.8, y: 42.6 },
   { id: 3, local: 'EF', x: 15.8, y: 47.1 },
   { id: 4, local: 'EM', x: 28.9, y: 7.8 },
-  { id: 5, local: 'EM', x: 29.2, y: 14.8 },
+  { id: 5, local: 'EM', x: 29.2, y: 14.8 },   // bingo / região superior
   { id: 6, local: 'EM', x: 29.2, y: 22.0 },
   { id: 7, local: 'EM', x: 24.8, y: 67.6 },
   { id: 8, local: 'EM', x: 27.2, y: 67.6 },
@@ -30,9 +30,9 @@ const POSICOES_MAPA = [
   { id: 20, local: 'EF', x: 62.6, y: 27.3 },
   { id: 21, local: 'EM', x: 56.7, y: 39.7 },
   { id: 22, local: 'EM', x: 56.7, y: 45.0 },
-  { id: 23, local: 'EF', x: 72.2, y: 34.4 },
+  { id: 23, local: 'EF', x: 72.2, y: 34.4 },  // ajustada
   { id: 24, local: 'EF', x: 76.7, y: 34.8 },
-  { id: 25, local: 'EM', x: 35.0, y: 13.4 },
+  { id: 25, local: 'EM', x: 35.0, y: 13.4 },  // nova barraca perto do bingo
 ];
 
 function normalize(value) {
@@ -64,6 +64,18 @@ function getStatus(remanescentes) {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function getMaxOffset(zoom) {
+  return ((zoom - 1) / zoom) * 50;
+}
+
+function clampOffset(x, y, zoom) {
+  const maxOffset = getMaxOffset(zoom);
+  return {
+    x: clamp(x, -maxOffset, maxOffset),
+    y: clamp(y, -maxOffset, maxOffset),
+  };
 }
 
 function BarracaMarker({ active }) {
@@ -143,6 +155,10 @@ export default function App() {
   const [mapZoom, setMapZoom] = useState(1);
   const [mapOffset, setMapOffset] = useState({ x: 0, y: 0 });
 
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragOrigin, setDragOrigin] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     async function load() {
       try {
@@ -213,7 +229,7 @@ export default function App() {
   const activeBarraca = barracas.find((item) => item.key === activeKey) || null;
 
   function focusBarraca(barraca, zoom = 1.32) {
-    const maxOffset = ((zoom - 1) / zoom) * 50;
+    const maxOffset = getMaxOffset(zoom);
     const nextX = clamp(50 - barraca.x, -maxOffset, maxOffset);
     const nextY = clamp(50 - barraca.y, -maxOffset, maxOffset);
 
@@ -247,14 +263,18 @@ export default function App() {
   }
 
   function handleRowLeave() {
-    if (!lockedKey) {
+    if (!lockedKey && !isDragging) {
       setHoveredKey(null);
       resetMapa();
     }
   }
 
   function handleZoomIn() {
-    setMapZoom((prev) => Math.min(1.9, Number((prev + 0.12).toFixed(2))));
+    setMapZoom((prev) => {
+      const next = Math.min(1.9, Number((prev + 0.12).toFixed(2)));
+      setMapOffset((current) => clampOffset(current.x, current.y, next));
+      return next;
+    });
   }
 
   function handleZoomOut() {
@@ -262,9 +282,36 @@ export default function App() {
       const next = Math.max(1, Number((prev - 0.12).toFixed(2)));
       if (next === 1) {
         setMapOffset({ x: 0, y: 0 });
+      } else {
+        setMapOffset((current) => clampOffset(current.x, current.y, next));
       }
       return next;
     });
+  }
+
+  function handleMouseDown(e) {
+    if (mapZoom <= 1) return;
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+    setDragOrigin({ x: mapOffset.x, y: mapOffset.y });
+  }
+
+  function handleMouseMove(e) {
+    if (!isDragging) return;
+
+    const dx = e.clientX - dragStart.x;
+    const dy = e.clientY - dragStart.y;
+
+    const sensitivity = 0.08;
+
+    const nextX = dragOrigin.x + dx * sensitivity;
+    const nextY = dragOrigin.y + dy * sensitivity;
+
+    setMapOffset(clampOffset(nextX, nextY, mapZoom));
+  }
+
+  function handleMouseUp() {
+    setIsDragging(false);
   }
 
   return (
@@ -308,6 +355,7 @@ export default function App() {
               onClick={() => {
                 setLockedKey(null);
                 setHoveredKey(null);
+                setIsDragging(false);
                 resetMapa();
               }}
             >
@@ -317,13 +365,17 @@ export default function App() {
 
           <div className="map-frame">
             <motion.div
-              className="map-zoom-layer"
+              className={`map-zoom-layer ${isDragging ? 'dragging' : ''}`}
               animate={{
                 scale: mapZoom,
                 x: `${mapOffset.x}%`,
                 y: `${mapOffset.y}%`,
               }}
-              transition={{ type: 'spring', stiffness: 180, damping: 24 }}
+              transition={isDragging ? { duration: 0 } : { type: 'spring', stiffness: 180, damping: 24 }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
             >
               <img src={MAPA_URL} alt="Mapa da Festa Junina" className="map-image" />
 
