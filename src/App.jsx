@@ -431,7 +431,15 @@ export default function App() {
               <img src={MAPA_URL} alt="Mapa da Festa Junina" className="map-image" />
 
               {barracasFiltradas
-                .filter((barraca) => barraca.x > 0 && barraca.y > 0)
+                .filter(
+                  (barraca) =>
+                    Number.isFinite(barraca.x) &&
+                    Number.isFinite(barraca.y) &&
+                    barraca.x >= 0 &&
+                    barraca.x <= 100 &&
+                    barraca.y >= 0 &&
+                    barraca.y <= 100
+                )
                 .map((barraca) => {
                   const isActive = barraca.key === activeKey;
 
