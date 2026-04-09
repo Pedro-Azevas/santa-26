@@ -651,3 +651,44 @@ button {
     font-size: 15px;
   }
 }
+
+.list-slot {
+  min-width: 120px;
+  border-radius: 18px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 700;
+}
+
+.list-slot-time {
+  font-size: 13px;
+  line-height: 1.15;
+}
+
+.list-slot-meta {
+  font-size: 11px;
+  line-height: 1.15;
+  opacity: 0.9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.slot-on {
+  background: #63d7ec;
+  color: #111;
+}
+
+.slot-warn {
+  background: #efc845;
+  color: #111;
+}
+
+.slot-off {
+  background: #b8b8b8;
+  color: #fff;
+}
