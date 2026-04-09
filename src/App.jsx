@@ -8,36 +8,6 @@ const JSON_URL =
 const MAPA_URL = '/mapa-festa.jpeg';
 const HERO_URL = '/hero-festa-pb.jpg';
 
-const POSICOES_MAPA = [
-  { id: 1, local: 'EM', x: 15.7, y: 38.1 },
-  { id: 2, local: 'EF', x: 15.8, y: 42.6 },
-  { id: 3, local: 'EF', x: 15.8, y: 47.1 },
-  { id: 4, local: 'EM', x: 28.9, y: 7.8 },
-  { id: 5, local: 'EM', x: 29.2, y: 14.8 },
-  { id: 6, local: 'EM', x: 29.2, y: 22.0 },
-  { id: 7, local: 'EM', x: 24.8, y: 67.6 },
-  { id: 8, local: 'EM', x: 27.2, y: 67.6 },
-  { id: 9, local: 'EM', x: 33.0, y: 69.3 },
-  { id: 10, local: 'EM', x: 33.0, y: 64.4 },
-  { id: 11, local: 'EM', x: 33.1, y: 59.4 },
-  { id: 12, local: 'EM', x: 42.1, y: 44.0 },
-  { id: 13, local: 'EM', x: 45.7, y: 44.0 },
-  { id: 14, local: 'EM', x: 45.7, y: 49.6 },
-  { id: 15, local: 'EF', x: 45.7, y: 55.0 },
-  { id: 16, local: 'EF', x: 45.7, y: 60.4 },
-  { id: 17, local: 'EF', x: 45.8, y: 66.1 },
-  { id: 18, local: 'EI', x: 51.8, y: 7.0 },
-  { id: 19, local: 'EF', x: 60.4, y: 27.3 },
-  { id: 20, local: 'EF', x: 62.6, y: 27.3 },
-  { id: 21, local: 'EM', x: 56.7, y: 39.7 },
-  { id: 22, local: 'EM', x: 56.7, y: 45.0 },
-  { id: 23, local: 'EF', x: 72.2, y: 34.4 },
-  { id: 24, local: 'EF', x: 76.7, y: 34.8 },
-  { id: 25, local: 'EM', x: 35.0, y: 13.4 },
-  { id: 26, local: 'ginásio', x: 38.5, y: 15.0 },
-  { id: 27, local: 'viveiro', x: 57.6, y: 12.8 },
-];
-
 function normalize(value) {
   return String(value ?? '')
     .normalize('NFD')
@@ -47,7 +17,8 @@ function normalize(value) {
 }
 
 function toNumber(value) {
-  const n = Number(String(value ?? '').replace(',', '.'));
+  if (value === '' || value === null || value === undefined) return 0;
+  const n = Number(String(value).replace(',', '.'));
   return Number.isFinite(n) ? n : 0;
 }
 
@@ -198,19 +169,12 @@ export default function App() {
       const horario = String(row['HORÁRIO'] ?? row.HORARIO ?? '').trim();
       const link = String(row.LINK_FORMS ?? '').trim();
 
-      // FILTRO REAL
       if (!nome || !local) continue;
       if (!id || Number.isNaN(id)) continue;
 
       const key = `${id}-${normalize(nome)}-${normalize(local)}`;
-
-      const pos =
-        POSICOES_MAPA.find(
-          (item) =>
-            Number(item.id) === id &&
-            normalize(item.local) === normalize(local)
-        ) ||
-        POSICOES_MAPA.find((item) => Number(item.id) === id);
+      const x = toNumber(row.X);
+      const y = toNumber(row.Y);
 
       if (!grouped.has(key)) {
         grouped.set(key, {
@@ -219,8 +183,8 @@ export default function App() {
           nome,
           local,
           tipo,
-          x: pos?.x ?? 50,
-          y: pos?.y ?? 50,
+          x,
+          y,
           horarios: [],
         });
       }
@@ -466,33 +430,35 @@ export default function App() {
             >
               <img src={MAPA_URL} alt="Mapa da Festa Junina" className="map-image" />
 
-              {barracasFiltradas.map((barraca) => {
-                const isActive = barraca.key === activeKey;
+              {barracasFiltradas
+                .filter((barraca) => barraca.x > 0 && barraca.y > 0)
+                .map((barraca) => {
+                  const isActive = barraca.key === activeKey;
 
-                return (
-                  <div
-                    key={barraca.key}
-                    className="marker-anchor"
-                    style={{ left: `${barraca.x}%`, top: `${barraca.y}%` }}
-                    onMouseEnter={() => !lockedKey && setHoveredKey(barraca.key)}
-                    onMouseLeave={() => !lockedKey && setHoveredKey(null)}
-                  >
-                    <motion.button
-                      type="button"
-                      className="marker-btn"
-                      aria-label={`${barraca.nome} ${barraca.local}`}
-                      onClick={() => handleMarkerClick(barraca)}
-                      whileTap={{ scale: 0.96 }}
+                  return (
+                    <div
+                      key={barraca.key}
+                      className="marker-anchor"
+                      style={{ left: `${barraca.x}%`, top: `${barraca.y}%` }}
+                      onMouseEnter={() => !lockedKey && setHoveredKey(barraca.key)}
+                      onMouseLeave={() => !lockedKey && setHoveredKey(null)}
                     >
-                      <BarracaMarker active={isActive} />
-                    </motion.button>
+                      <motion.button
+                        type="button"
+                        className="marker-btn"
+                        aria-label={`${barraca.nome} ${barraca.local}`}
+                        onClick={() => handleMarkerClick(barraca)}
+                        whileTap={{ scale: 0.96 }}
+                      >
+                        <BarracaMarker active={isActive} />
+                      </motion.button>
 
-                    <div className="desktop-popup">
-                      <AnimatePresence>{isActive && <PopupBarraca barraca={barraca} />}</AnimatePresence>
+                      <div className="desktop-popup">
+                        <AnimatePresence>{isActive && <PopupBarraca barraca={barraca} />}</AnimatePresence>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </motion.div>
           </div>
         </section>
@@ -531,9 +497,10 @@ export default function App() {
 
                       if (!status.disponivel || !item.link) {
                         return (
-                          <span key={`${barraca.key}-${item.horario}`} className="chip chip-off">
-                            {item.horario}
-                          </span>
+                          <div key={`${barraca.key}-${item.horario}`} className="list-slot slot-off">
+                            <div className="list-slot-time">{item.horario}</div>
+                            <div className="list-slot-meta">{status.texto}</div>
+                          </div>
                         );
                       }
 
@@ -543,15 +510,18 @@ export default function App() {
                           href={item.link}
                           target="_blank"
                           rel="noreferrer"
-                          className={`chip ${status.classe}`}
+                          className={`list-slot ${item.remanescentes === 1 ? 'slot-warn' : 'slot-on'}`}
                           onClick={(e) => e.stopPropagation()}
                         >
-                          {item.horario}
+                          <div className="list-slot-time">{item.horario}</div>
+                          <div className="list-slot-meta">{status.texto}</div>
                         </a>
                       );
                     })
                   ) : (
-                    <span className="chip chip-off">Sem horários</span>
+                    <div className="list-slot slot-off">
+                      <div className="list-slot-time">Sem horários</div>
+                    </div>
                   )}
                 </div>
               </div>
