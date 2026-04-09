@@ -153,8 +153,8 @@ button {
   inset: 7px 0 auto;
   height: 38px;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='38' viewBox='0 0 220 38'%3E%3Cpath d='M0 3H44V32H29L22 24L15 32H0Z' fill='%232f43ff'/%3E%3Cpath d='M44 3H88V32H73L66 24L59 32H44Z' fill='%23f5f1e9'/%3E%3Cpath d='M88 3H132V32H117L110 24L103 32H88Z' fill='%23aa2c20'/%3E%3Cpath d='M132 3H176V32H161L154 24L147 32H132Z' fill='%23b69605'/%3E%3Cpath d='M176 3H220V32H205L198 24L191 32H176Z' fill='%232f43ff'/%3E%3C/svg%3E")
-      repeat-x left top / 220px 38px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='38' viewBox='0 0 280 38'%3E%3Cpath d='M0 3H56V32H38L28 18L18 32H0Z' fill='%232f43ff'/%3E%3Cpath d='M56 3H112V32H94L84 18L74 32H56Z' fill='%23f5f1e9'/%3E%3Cpath d='M112 3H168V32H150L140 18L130 32H112Z' fill='%23aa2c20'/%3E%3Cpath d='M168 3H224V32H206L196 18L186 32H168Z' fill='%23b69605'/%3E%3Cpath d='M224 3H280V32H262L252 18L242 32H224Z' fill='%232f43ff'/%3E%3C/svg%3E")
+      repeat-x left top / 280px 38px;
 }
 
 .flags::after {
@@ -301,37 +301,26 @@ button {
 }
 
 .marker-hitbox {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
-  background: radial-gradient(circle at center, rgba(23, 23, 23, 0.62) 0 3px, rgba(247, 243, 236, 0.96) 3px 5px, transparent 5px 100%);
+  background: transparent;
 }
 
 .marker-highlight {
-  position: absolute;
-  inset: -6px;
-  border-radius: 999px;
-  background: transparent;
-  transition: 0.28s ease;
+  display: none;
 }
 
 .marker-highlight.is-active {
-  background: rgba(96, 215, 238, 0.22);
-  box-shadow: 0 0 0 1px rgba(96, 215, 238, 0.62);
+  display: none;
 }
 
 .marker-glow {
-  position: absolute;
-  inset: -14px;
-  border-radius: 999px;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.32s ease;
+  display: none;
 }
 
 .marker-glow.is-active {
-  opacity: 1;
-  background: radial-gradient(circle, rgba(96, 215, 238, 0.3), transparent 70%);
+  display: none;
 }
 
 .desktop-popup {
@@ -485,10 +474,10 @@ button {
 }
 
 .list-slot {
-  min-width: 112px;
-  max-width: 112px;
+  min-width: 118px;
+  max-width: 118px;
   border-radius: 999px;
-  padding: 9px 12px 8px;
+  padding: 10px 13px 9px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -501,17 +490,18 @@ button {
 }
 
 .list-slot-time {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.05;
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
 
 .list-slot-meta {
-  font-size: 8px;
-  line-height: 1.1;
+  font-size: 9px;
+  line-height: 1.12;
   opacity: 0.96;
   letter-spacing: 0.03em;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -558,7 +548,7 @@ button {
 
 .list-row {
   display: grid;
-  grid-template-columns: 98px minmax(260px, 420px) minmax(240px, max-content) 28px;
+  grid-template-columns: 98px minmax(0, 1fr) max-content 28px;
   gap: 18px;
   align-items: center;
   padding: 16px 0;
@@ -618,9 +608,11 @@ button {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   min-width: 0;
+  justify-self: end;
+  padding-right: 14px;
 }
 
 .list-arrow {
@@ -693,7 +685,7 @@ button {
   }
 
   .list-row {
-    grid-template-columns: 92px minmax(230px, 360px) minmax(220px, max-content) 22px;
+    grid-template-columns: 92px minmax(0, 1fr) max-content 22px;
     gap: 14px;
   }
 }
@@ -800,12 +792,12 @@ button {
   }
 
   .list-slot {
-    min-width: 102px;
-    max-width: 102px;
+    min-width: 108px;
+    max-width: 108px;
   }
 
   .list-slot-time {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .list-slot-meta {
@@ -819,7 +811,7 @@ button {
   .flags::before {
     top: 6px;
     height: 36px;
-    background-size: 180px 36px;
+    background-size: 224px 36px;
   }
 
   .flags::after {
