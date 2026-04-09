@@ -142,7 +142,7 @@ button {
 
 .flags {
   position: relative;
-  height: 58px;
+  height: 68px;
   background: var(--paper);
   overflow: hidden;
 }
@@ -150,11 +150,11 @@ button {
 .flags::before {
   content: '';
   position: absolute;
-  inset: 7px 0 auto;
-  height: 42px;
+  inset: 6px 0 auto;
+  height: 54px;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='42' viewBox='0 0 480 42'%3E%3Cpath d='M0 4H96V38H58L48 24L38 38H0Z' fill='%232f43ff'/%3E%3Cpath d='M96 4H192V38H154L144 24L134 38H96Z' fill='%23f5f1e9'/%3E%3Cpath d='M192 4H288V38H250L240 24L230 38H192Z' fill='%23aa2c20'/%3E%3Cpath d='M288 4H384V38H346L336 24L326 38H288Z' fill='%23b69605'/%3E%3Cpath d='M384 4H480V38H442L432 24L422 38H384Z' fill='%232f43ff'/%3E%3C/svg%3E")
-      repeat-x left top / 480px 42px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='54' viewBox='0 0 260 54'%3E%3Cpath d='M0 3H52V51H34L26 34L18 51H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 3H104V51H86L78 34L70 51H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 3H156V51H138L130 34L122 51H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 3H208V51H190L182 34L174 51H156Z' fill='%23b69605'/%3E%3Cpath d='M208 3H260V51H242L234 34L226 51H208Z' fill='%232f43ff'/%3E%3C/svg%3E")
+      repeat-x left top / 260px 54px;
 }
 
 .flags::after {
@@ -162,7 +162,7 @@ button {
   position: absolute;
   left: 0;
   right: 0;
-  top: 8px;
+  top: 7px;
   height: 1px;
   background: rgba(125, 102, 77, 0.18);
 }
@@ -548,7 +548,7 @@ button {
 
 .list-row {
   display: grid;
-  grid-template-columns: 98px minmax(280px, 470px) max-content 18px;
+  grid-template-columns: 98px 330px max-content 18px;
   gap: 16px;
   align-items: center;
   padding: 16px 0;
@@ -612,7 +612,7 @@ button {
   align-items: center;
   min-width: 0;
   justify-self: start;
-  padding-left: 8px;
+  padding-left: 0;
 }
 
 .list-arrow {
@@ -685,7 +685,7 @@ button {
   }
 
   .list-row {
-    grid-template-columns: 92px minmax(240px, 360px) max-content 18px;
+    grid-template-columns: 92px 300px max-content 18px;
     gap: 14px;
   }
 }
@@ -805,13 +805,13 @@ button {
   }
 
   .flags {
-    height: 52px;
+    height: 58px;
   }
 
   .flags::before {
     top: 6px;
-    height: 38px;
-    background-size: 384px 38px;
+    height: 46px;
+    background-size: 220px 46px;
   }
 
   .flags::after {
