@@ -153,8 +153,8 @@ button {
   inset: 7px 0 auto;
   height: 38px;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='38' viewBox='0 0 160 38'%3E%3Cpath d='M0 3H32V20L25 30V20H7V30L0 20Z' fill='%232f43ff'/%3E%3Cpath d='M32 3H64V20L57 30V20H39V30L32 20Z' fill='%23f5f1e9'/%3E%3Cpath d='M64 3H96V20L89 30V20H71V30L64 20Z' fill='%23aa2c20'/%3E%3Cpath d='M96 3H128V20L121 30V20H103V30L96 20Z' fill='%23b69605'/%3E%3Cpath d='M128 3H160V20L153 30V20H135V30L128 20Z' fill='%232f43ff'/%3E%3C/svg%3E")
-      repeat-x left top / 160px 38px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='38' viewBox='0 0 220 38'%3E%3Cpath d='M0 3H44V32H29L22 24L15 32H0Z' fill='%232f43ff'/%3E%3Cpath d='M44 3H88V32H73L66 24L59 32H44Z' fill='%23f5f1e9'/%3E%3Cpath d='M88 3H132V32H117L110 24L103 32H88Z' fill='%23aa2c20'/%3E%3Cpath d='M132 3H176V32H161L154 24L147 32H132Z' fill='%23b69605'/%3E%3Cpath d='M176 3H220V32H205L198 24L191 32H176Z' fill='%232f43ff'/%3E%3C/svg%3E")
+      repeat-x left top / 220px 38px;
 }
 
 .flags::after {
@@ -485,10 +485,10 @@ button {
 }
 
 .list-slot {
-  min-width: 96px;
-  max-width: 96px;
+  min-width: 112px;
+  max-width: 112px;
   border-radius: 999px;
-  padding: 7px 10px 8px;
+  padding: 9px 12px 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -501,17 +501,17 @@ button {
 }
 
 .list-slot-time {
-  font-size: 11px;
-  line-height: 1.1;
-  letter-spacing: 0.015em;
+  font-size: 13px;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
   white-space: nowrap;
 }
 
 .list-slot-meta {
-  font-size: 7px;
+  font-size: 8px;
   line-height: 1.1;
   opacity: 0.96;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
@@ -558,7 +558,7 @@ button {
 
 .list-row {
   display: grid;
-  grid-template-columns: 98px minmax(0, 1fr) max-content 28px;
+  grid-template-columns: 98px minmax(260px, 420px) minmax(240px, max-content) 28px;
   gap: 18px;
   align-items: center;
   padding: 16px 0;
@@ -598,7 +598,7 @@ button {
 .list-name {
   font-size: clamp(20px, 2vw, 31px);
   line-height: 0.95;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.008em;
   text-transform: uppercase;
   color: var(--ink);
@@ -607,18 +607,18 @@ button {
 
 .list-local {
   margin-top: 6px;
-  font-size: 13px;
+  font-size: 14px;
   color: #7a7269;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   font-weight: 500;
   text-transform: uppercase;
 }
 
 .chips-wrap {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   min-width: 0;
 }
@@ -693,7 +693,7 @@ button {
   }
 
   .list-row {
-    grid-template-columns: 92px minmax(0, 1fr) max-content 22px;
+    grid-template-columns: 92px minmax(230px, 360px) minmax(220px, max-content) 22px;
     gap: 14px;
   }
 }
@@ -800,16 +800,16 @@ button {
   }
 
   .list-slot {
-    min-width: 92px;
-    max-width: 92px;
+    min-width: 102px;
+    max-width: 102px;
   }
 
   .list-slot-time {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .list-slot-meta {
-    font-size: 7px;
+    font-size: 8px;
   }
 
   .flags {
@@ -819,7 +819,7 @@ button {
   .flags::before {
     top: 6px;
     height: 36px;
-    background-size: 140px 36px;
+    background-size: 180px 36px;
   }
 
   .flags::after {
