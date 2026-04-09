@@ -26,12 +26,16 @@ function sortHorario(a, b) {
   return String(a.horario).localeCompare(String(b.horario), 'pt-BR');
 }
 
+function getHorarioValue(row) {
+  return String(row['HOR\u00c1RIO'] ?? row['HOR\u00c3\u0081RIO'] ?? row.HORARIO ?? '').trim();
+}
+
 function getStatus(remanescentes) {
   if (remanescentes <= 0) {
     return { texto: 'ESGOTADO', classe: 'chip chip-off', disponivel: false };
   }
   if (remanescentes === 1) {
-    return { texto: 'ÚLTIMA VAGA', classe: 'chip chip-warn', disponivel: true };
+    return { texto: '\u00daLTIMA VAGA', classe: 'chip chip-warn', disponivel: true };
   }
   return { texto: `${remanescentes} vagas`, classe: 'chip chip-on', disponivel: true };
 }
@@ -93,7 +97,7 @@ function PopupBarraca({ barraca, isMobile = false, onClose }) {
       </div>
 
       <div className="popup-list">
-        {barraca.horarios.length === 0 && <div className="popup-empty">Sem horários</div>}
+        {barraca.horarios.length === 0 && <div className="popup-empty">{'Sem hor\u00e1rios'}</div>}
 
         {barraca.horarios.map((item) => {
           const status = getStatus(item.remanescentes);
@@ -148,7 +152,7 @@ export default function App() {
         setLoading(true);
         setError('');
         const res = await fetch(JSON_URL);
-        if (!res.ok) throw new Error('Não foi possível carregar a planilha do site.');
+        if (!res.ok) throw new Error('N\u00e3o foi poss\u00edvel carregar a planilha do site.');
         const json = await res.json();
         setData(Array.isArray(json) ? json : []);
       } catch (err) {
@@ -169,7 +173,7 @@ export default function App() {
       const nome = String(row.NOME ?? '').trim();
       const local = String(row.LOCAL ?? '').trim();
       const tipo = String(row.TIPO ?? '').trim();
-      const horario = String(row['HORÁRIO'] ?? row.HORARIO ?? '').trim();
+      const horario = getHorarioValue(row);
       const link = String(row.LINK_FORMS ?? '').trim();
 
       if (!nome || !local) continue;
@@ -350,13 +354,22 @@ export default function App() {
         <section className="hero">
           <div className="hero-left">
             <div>
-              <h1 className="hero-title">Festa Junina do Santa 2026</h1>
+              <h1 className="hero-title">
+                Festa
+                <br />
+                Junina
+                <br />
+                do Santa
+                <br />
+                2026
+              </h1>
+
               <div className="hero-copy">
-                <h2>Venha ser voluntário!</h2>
+                <h2>{'Venha ser volunt\u00e1rio!'}</h2>
                 <p>
-                  Escolha, na lista ou no mapa, a barraca onde gostaria de trabalhar. Após clicar nela,
-                  você verá os horários disponíveis. Ao selecionar o horário desejado, você será direcionado
-                  a um formulário para inserir seus dados e confirmar sua participação.
+                  {
+                    'Escolha, na lista ou no mapa, a barraca onde gostaria de trabalhar. Ap\u00f3s clicar nela, voc\u00ea ver\u00e1 os hor\u00e1rios dispon\u00edveis. Ao selecionar o hor\u00e1rio desejado, voc\u00ea ser\u00e1 direcionado a um formul\u00e1rio para inserir seus dados e confirmar sua participa\u00e7\u00e3o.'
+                  }
                 </p>
               </div>
             </div>
@@ -533,9 +546,13 @@ export default function App() {
                     })
                   ) : (
                     <div className="list-slot slot-off">
-                      <div className="list-slot-time">Sem horários</div>
+                      <div className="list-slot-time">{'Sem hor\u00e1rios'}</div>
                     </div>
                   )}
+                </div>
+
+                <div className="list-arrow" aria-hidden="true">
+                  &rarr;
                 </div>
               </motion.div>
             ))}
