@@ -153,8 +153,8 @@ button {
   inset: 6px 0 auto;
   height: 60px;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='60' viewBox='0 0 260 60'%3E%3Cpath d='M0 3H52V57H50.7L26 31L1.3 57H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 3H104V57H102.7L78 31L53.3 57H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 3H156V57H154.7L130 31L105.3 57H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 3H208V57H206.7L182 31L157.3 57H156Z' fill='%23b69605'/%3E%3Cpath d='M208 3H260V57H258.7L234 31L209.3 57H208Z' fill='%232f43ff'/%3E%3C/svg%3E")
-      repeat-x left top / 260px 60px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='60' viewBox='0 0 208 60'%3E%3Cpath d='M0 3H52V57H50.7L26 31L1.3 57H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 3H104V57H102.7L78 31L53.3 57H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 3H156V57H154.7L130 31L105.3 57H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 3H208V57H206.7L182 31L157.3 57H156Z' fill='%23b69605'/%3E%3C/svg%3E")
+      repeat-x left top / 208px 60px;
 }
 
 .flags::after {
@@ -814,7 +814,7 @@ button {
   .flags::before {
     top: 6px;
     height: 50px;
-    background-size: 220px 50px;
+    background-size: 172px 50px;
   }
 
   .flags::after {
