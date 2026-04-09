@@ -142,7 +142,7 @@ button {
 
 .flags {
   position: relative;
-  height: 68px;
+  height: 74px;
   background: var(--paper);
   overflow: hidden;
 }
@@ -151,10 +151,10 @@ button {
   content: '';
   position: absolute;
   inset: 6px 0 auto;
-  height: 54px;
+  height: 60px;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='54' viewBox='0 0 260 54'%3E%3Cpath d='M0 3H52V51H34L26 34L18 51H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 3H104V51H86L78 34L70 51H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 3H156V51H138L130 34L122 51H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 3H208V51H190L182 34L174 51H156Z' fill='%23b69605'/%3E%3Cpath d='M208 3H260V51H242L234 34L226 51H208Z' fill='%232f43ff'/%3E%3C/svg%3E")
-      repeat-x left top / 260px 54px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='60' viewBox='0 0 260 60'%3E%3Cpath d='M0 3H52V57H50.7L26 31L1.3 57H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 3H104V57H102.7L78 31L53.3 57H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 3H156V57H154.7L130 31L105.3 57H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 3H208V57H206.7L182 31L157.3 57H156Z' fill='%23b69605'/%3E%3Cpath d='M208 3H260V57H258.7L234 31L209.3 57H208Z' fill='%232f43ff'/%3E%3C/svg%3E")
+      repeat-x left top / 260px 60px;
 }
 
 .flags::after {
@@ -548,7 +548,7 @@ button {
 
 .list-row {
   display: grid;
-  grid-template-columns: 98px 330px max-content 18px;
+  grid-template-columns: 98px 330px max-content minmax(0, 1fr) 18px;
   gap: 16px;
   align-items: center;
   padding: 16px 0;
@@ -613,12 +613,15 @@ button {
   min-width: 0;
   justify-self: start;
   padding-left: 0;
+  grid-column: 3;
 }
 
 .list-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
+  grid-column: 5;
+  justify-self: end;
   font-size: 24px;
   line-height: 1;
   color: var(--ink);
@@ -685,7 +688,7 @@ button {
   }
 
   .list-row {
-    grid-template-columns: 92px 300px max-content 18px;
+    grid-template-columns: 92px 300px max-content minmax(0, 1fr) 18px;
     gap: 14px;
   }
 }
@@ -805,13 +808,13 @@ button {
   }
 
   .flags {
-    height: 58px;
+    height: 64px;
   }
 
   .flags::before {
     top: 6px;
-    height: 46px;
-    background-size: 220px 46px;
+    height: 50px;
+    background-size: 220px 50px;
   }
 
   .flags::after {
