@@ -55,8 +55,11 @@ function clampOffset(x, y, zoom) {
 function BarracaMarker({ active }) {
   return (
     <motion.div
-      animate={{ scale: active ? 1.06 : 1 }}
-      transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+      animate={{
+        scale: active ? 1.08 : 1,
+        opacity: 1,
+      }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
       className="marker-wrap"
     >
       <span className={`marker-glow ${active ? 'is-active' : ''}`} />
@@ -69,10 +72,10 @@ function BarracaMarker({ active }) {
 function PopupBarraca({ barraca, isMobile = false, onClose }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10, scale: 0.96 }}
+      initial={{ opacity: 0, y: 12, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 10, scale: 0.96 }}
-      transition={{ duration: 0.18 }}
+      exit={{ opacity: 0, y: 10, scale: 0.97 }}
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
       className={isMobile ? 'popup popup-mobile' : 'popup'}
     >
       <div className="popup-head">
@@ -239,7 +242,7 @@ export default function App() {
     barracas.find((item) => item.key === activeKey) ||
     null;
 
-  function focusBarraca(barraca, zoom = 1.32) {
+  function focusBarraca(barraca, zoom = 1.28) {
     const maxOffset = getMaxOffset(zoom);
     const nextX = clamp(50 - barraca.x, -maxOffset, maxOffset);
     const nextY = clamp(50 - barraca.y, -maxOffset, maxOffset);
@@ -422,7 +425,7 @@ export default function App() {
                 x: `${mapOffset.x}%`,
                 y: `${mapOffset.y}%`,
               }}
-              transition={isDragging ? { duration: 0 } : { type: 'spring', stiffness: 180, damping: 24 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
@@ -456,7 +459,7 @@ export default function App() {
                         className="marker-btn"
                         aria-label={`${barraca.nome} ${barraca.local}`}
                         onClick={() => handleMarkerClick(barraca)}
-                        whileTap={{ scale: 0.96 }}
+                        whileTap={{ scale: 0.97 }}
                       >
                         <BarracaMarker active={isActive} />
                       </motion.button>
@@ -484,12 +487,14 @@ export default function App() {
           {!loading &&
             !error &&
             barracasFiltradas.map((barraca) => (
-              <div
+              <motion.div
                 key={barraca.key}
                 className={`list-row ${barraca.key === activeKey ? 'is-active' : ''}`}
                 onMouseEnter={() => handleRowEnter(barraca)}
                 onMouseLeave={handleRowLeave}
                 onClick={() => handleMarkerClick(barraca)}
+                layout
+                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="list-meta">{barraca.tipo || ''}</div>
 
@@ -532,7 +537,7 @@ export default function App() {
                     </div>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
         </section>
 
