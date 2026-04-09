@@ -30,12 +30,35 @@ function getHorarioValue(row) {
   return String(row['HOR\u00c1RIO'] ?? row['HOR\u00c3\u0081RIO'] ?? row.HORARIO ?? '').trim();
 }
 
+function formatHorarioPart(value) {
+  const clean = String(value ?? '').trim();
+  const match = clean.match(/^(\d{1,2})(?::|h)?(\d{2})?$/i);
+
+  if (!match) return clean;
+
+  const [, hour, minutes] = match;
+  if (!minutes || minutes === '00') return `${hour}h`;
+  return `${hour}h${minutes}`;
+}
+
+function formatHorarioLabel(value) {
+  const clean = String(value ?? '').replace(/\s+/g, ' ').trim();
+  if (!clean) return '';
+
+  const parts = clean.split(/\s*[-–—]\s*/);
+  if (parts.length === 2) {
+    return `${formatHorarioPart(parts[0])} - ${formatHorarioPart(parts[1])}`;
+  }
+
+  return formatHorarioPart(clean);
+}
+
 function getStatus(remanescentes) {
   if (remanescentes <= 0) {
-    return { texto: 'ESGOTADO', classe: 'chip chip-off', disponivel: false };
+    return { texto: 'esgotado', classe: 'chip chip-off', disponivel: false };
   }
   if (remanescentes === 1) {
-    return { texto: '\u00daLTIMA VAGA', classe: 'chip chip-warn', disponivel: true };
+    return { texto: '\u00faltima vaga', classe: 'chip chip-warn', disponivel: true };
   }
   return { texto: `${remanescentes} vagas`, classe: 'chip chip-on', disponivel: true };
 }
@@ -105,7 +128,7 @@ function PopupBarraca({ barraca, isMobile = false, onClose }) {
           if (!status.disponivel || !item.link) {
             return (
               <div key={`${barraca.key}-${item.horario}`} className={`${status.classe} popup-pill disabled`}>
-                <span>{item.horario}</span>
+                <span>{formatHorarioLabel(item.horario)}</span>
                 <span>{status.texto}</span>
               </div>
             );
@@ -119,7 +142,7 @@ function PopupBarraca({ barraca, isMobile = false, onClose }) {
               rel="noreferrer"
               className={`${status.classe} popup-pill`}
             >
-              <span>{item.horario}</span>
+              <span>{formatHorarioLabel(item.horario)}</span>
               <span className="popup-pill-right">
                 {status.texto}
                 <ExternalLink size={14} />
@@ -524,7 +547,7 @@ export default function App() {
                       if (!status.disponivel || !item.link) {
                         return (
                           <div key={`${barraca.key}-${item.horario}`} className="list-slot slot-off">
-                            <div className="list-slot-time">{item.horario}</div>
+                            <div className="list-slot-time">{formatHorarioLabel(item.horario)}</div>
                             <div className="list-slot-meta">{status.texto}</div>
                           </div>
                         );
@@ -539,7 +562,7 @@ export default function App() {
                           className={`list-slot ${item.remanescentes === 1 ? 'slot-warn' : 'slot-on'}`}
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <div className="list-slot-time">{item.horario}</div>
+                          <div className="list-slot-time">{formatHorarioLabel(item.horario)}</div>
                           <div className="list-slot-meta">{status.texto}</div>
                         </a>
                       );
