@@ -376,7 +376,7 @@ export default function App() {
       <main className="shell">
         <section className="hero">
           <div className="hero-left">
-            <div>
+            <div className="hero-intro">
               <h1 className="hero-title">
                 Festa
                 <br />

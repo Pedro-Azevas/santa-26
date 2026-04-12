@@ -758,12 +758,35 @@ button {
   }
 
   .hero {
+    display: grid;
+    grid-template-columns: 1fr;
     min-height: auto;
   }
 
   .hero-left {
-    padding-top: 20px;
-    padding-bottom: 18px;
+    display: contents;
+    padding: 0;
+  }
+
+  .hero-intro {
+    order: 1;
+    padding: 20px 16px 18px;
+  }
+
+  .hero-right {
+    order: 2;
+    width: 100%;
+  }
+
+  .hero-right,
+  .hero-photo-image {
+    height: min(76vh, 520px);
+    min-height: 360px;
+  }
+
+  .hero-left .section-title {
+    order: 3;
+    padding: 0 16px;
   }
 
   .hero-title {
@@ -777,8 +800,25 @@ button {
   }
 
   .section-title {
-    margin-top: 16px;
-    font-size: 42px;
+    margin-top: 0;
+    font-size: clamp(58px, 17vw, 68px);
+    line-height: 1;
+  }
+
+  .filter-pill,
+  .map-tool {
+    background: rgba(247, 243, 236, 0.54);
+    opacity: 0.68;
+  }
+
+  .filter-pill:hover,
+  .map-tool:hover {
+    background: rgba(248, 244, 238, 0.74);
+    opacity: 0.86;
+  }
+
+  .filter-pill.is-active {
+    opacity: 0.78;
   }
 
   .controls-bar {
@@ -871,17 +911,17 @@ button {
   }
 
   .flags {
-    height: 64px;
+    height: 68px;
   }
 
   .flags::before {
-    top: 6px;
-    height: 50px;
-    background-size: 172px 50px;
+    top: 4px;
+    height: 60px;
+    background-size: 208px 60px;
   }
 
   .flags::after {
-    top: 7px;
+    top: 5px;
   }
 
   .footer {
