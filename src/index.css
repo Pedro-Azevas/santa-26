@@ -96,7 +96,7 @@ button {
 
 .hero-copy {
   margin-top: 24px;
-  max-width: 290px;
+  max-width: 430px;
 }
 
 .hero-copy h2 {
@@ -109,7 +109,7 @@ button {
 
 .hero-copy p {
   margin: 0;
-  max-width: 245px;
+  max-width: 400px;
   font-size: 12.5px;
   line-height: 1.55;
   color: var(--ink);
@@ -117,7 +117,7 @@ button {
 
 .hero-right {
   align-self: start;
-  height: 340px;
+  height: clamp(430px, 43vw, 540px);
   min-height: 0;
   background: #c6beb4;
   overflow: hidden;
