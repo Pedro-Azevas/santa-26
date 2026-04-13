@@ -166,7 +166,7 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOrigin, setDragOrigin] = useState({ x: 0, y: 0 });
-  const [tipoFiltro, setTipoFiltro] = useState('todos');
+  const [filtroAtivo, setFiltroAtivo] = useState({ tipo: 'todos', valor: 'todos' });
   const [isMobilePopupOpen, setIsMobilePopupOpen] = useState(false);
 
   useEffect(() => {
@@ -254,10 +254,19 @@ export default function App() {
     return [...new Set(barracas.map((item) => item.tipo).filter((tipo) => String(tipo).trim() !== ''))];
   }, [barracas]);
 
+  const locaisDisponiveis = useMemo(() => {
+    return [...new Set(barracas.map((item) => item.local).filter((local) => String(local).trim() !== ''))].sort(
+      (a, b) => normalize(a).localeCompare(normalize(b), 'pt-BR'),
+    );
+  }, [barracas]);
+
   const barracasFiltradas = useMemo(() => {
-    if (tipoFiltro === 'todos') return barracas;
-    return barracas.filter((item) => normalize(item.tipo) === normalize(tipoFiltro));
-  }, [barracas, tipoFiltro]);
+    if (filtroAtivo.tipo === 'todos') return barracas;
+    if (filtroAtivo.tipo === 'local') {
+      return barracas.filter((item) => normalize(item.local) === normalize(filtroAtivo.valor));
+    }
+    return barracas.filter((item) => normalize(item.tipo) === normalize(filtroAtivo.valor));
+  }, [barracas, filtroAtivo]);
 
   const activeKey =
     barracasFiltradas.some((item) => item.key === (lockedKey || hoveredKey))
@@ -363,8 +372,8 @@ export default function App() {
     resetMapa();
   }
 
-  function handleChangeFiltro(tipo) {
-    setTipoFiltro(tipo);
+  function handleChangeFiltro(tipo, valor = 'todos') {
+    setFiltroAtivo({ tipo, valor });
     setLockedKey(null);
     setHoveredKey(null);
     setIsMobilePopupOpen(false);
@@ -412,7 +421,7 @@ export default function App() {
             <div className="filtros-wrap">
               <button
                 type="button"
-                className={`filter-pill ${tipoFiltro === 'todos' ? 'is-active' : ''}`}
+                className={`filter-pill ${filtroAtivo.tipo === 'todos' ? 'is-active' : ''}`}
                 onClick={() => handleChangeFiltro('todos')}
               >
                 Todos
@@ -420,12 +429,27 @@ export default function App() {
 
               {tiposDisponiveis.map((tipo) => (
                 <button
-                  key={tipo}
+                  key={`tipo-${tipo}`}
                   type="button"
-                  className={`filter-pill ${normalize(tipoFiltro) === normalize(tipo) ? 'is-active' : ''}`}
-                  onClick={() => handleChangeFiltro(tipo)}
+                  className={`filter-pill ${
+                    filtroAtivo.tipo === 'tipo' && normalize(filtroAtivo.valor) === normalize(tipo) ? 'is-active' : ''
+                  }`}
+                  onClick={() => handleChangeFiltro('tipo', tipo)}
                 >
                   {tipo}
+                </button>
+              ))}
+
+              {locaisDisponiveis.map((local) => (
+                <button
+                  key={`local-${local}`}
+                  type="button"
+                  className={`filter-pill filter-pill-local ${
+                    filtroAtivo.tipo === 'local' && normalize(filtroAtivo.valor) === normalize(local) ? 'is-active' : ''
+                  }`}
+                  onClick={() => handleChangeFiltro('local', local)}
+                >
+                  {local}
                 </button>
               ))}
             </div>

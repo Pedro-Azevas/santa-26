@@ -74,7 +74,7 @@ button {
 .hero {
   display: grid;
   grid-template-columns: minmax(300px, 0.78fr) minmax(420px, 1.22fr);
-  align-items: start;
+  align-items: stretch;
   min-height: 410px;
   background: var(--paper);
 }
@@ -116,9 +116,9 @@ button {
 }
 
 .hero-right {
-  align-self: start;
-  height: clamp(430px, 43vw, 540px);
-  min-height: 0;
+  align-self: stretch;
+  height: auto;
+  min-height: clamp(430px, 43vw, 540px);
   background: #c6beb4;
   overflow: hidden;
 }
@@ -146,7 +146,7 @@ button {
 
 .flags {
   position: relative;
-  height: 74px;
+  height: 134px;
   background: var(--paper);
   overflow: hidden;
 }
@@ -155,10 +155,10 @@ button {
   content: '';
   position: absolute;
   inset: 6px 0 auto;
-  height: 60px;
+  height: 120px;
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='60' viewBox='0 0 208 60'%3E%3Cpath d='M0 3H52V57H50.7L26 31L1.3 57H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 3H104V57H102.7L78 31L53.3 57H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 3H156V57H154.7L130 31L105.3 57H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 3H208V57H206.7L182 31L157.3 57H156Z' fill='%23b69605'/%3E%3C/svg%3E")
-      repeat-x left top / 208px 60px;
+      repeat-x left top / 208px 120px;
 }
 
 .flags::after {
@@ -176,7 +176,7 @@ button {
 ========================= */
 
 .map-section {
-  padding: 30px 26px 6px;
+  padding: 22px 26px 6px;
   background: var(--paper);
 }
 
@@ -199,28 +199,28 @@ button {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 8px 13px;
-  background: rgba(247, 243, 236, 0.62);
+  background: rgba(247, 243, 236, 0.52);
   color: var(--ink);
   cursor: pointer;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  opacity: 0.72;
+  opacity: 0.66;
   transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 
 .filter-pill:hover {
-  background: rgba(248, 244, 238, 0.82);
+  background: rgba(248, 244, 238, 0.74);
   border-color: rgba(77, 64, 49, 0.28);
-  opacity: 0.92;
+  opacity: 0.86;
 }
 
 .filter-pill.is-active {
   background: var(--navy);
   border-color: var(--navy);
   color: #ffffff;
-  opacity: 0.82;
+  opacity: 0.78;
 }
 
 .map-toolbar {
@@ -232,7 +232,7 @@ button {
 
 .map-tool {
   border: 1px solid var(--line);
-  background: rgba(247, 243, 236, 0.62);
+  background: rgba(247, 243, 236, 0.52);
   color: var(--ink);
   border-radius: 999px;
   min-height: 34px;
@@ -241,14 +241,14 @@ button {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  opacity: 0.72;
+  opacity: 0.66;
   transition: background 0.18s ease, border-color 0.18s ease;
 }
 
 .map-tool:hover {
-  background: rgba(248, 244, 238, 0.82);
+  background: rgba(248, 244, 238, 0.74);
   border-color: rgba(77, 64, 49, 0.28);
-  opacity: 0.92;
+  opacity: 0.86;
 }
 
 .map-tool.reset {
@@ -786,7 +786,7 @@ button {
 
   .hero-left .section-title {
     order: 3;
-    padding: 0 16px;
+    padding: 0 16px 22px;
   }
 
   .hero-title {
@@ -807,18 +807,18 @@ button {
 
   .filter-pill,
   .map-tool {
-    background: rgba(247, 243, 236, 0.54);
-    opacity: 0.68;
+    background: rgba(247, 243, 236, 0.46);
+    opacity: 0.62;
   }
 
   .filter-pill:hover,
   .map-tool:hover {
-    background: rgba(248, 244, 238, 0.74);
-    opacity: 0.86;
+    background: rgba(248, 244, 238, 0.68);
+    opacity: 0.8;
   }
 
   .filter-pill.is-active {
-    opacity: 0.78;
+    opacity: 0.72;
   }
 
   .controls-bar {
@@ -911,17 +911,17 @@ button {
   }
 
   .flags {
-    height: 68px;
+    height: 134px;
   }
 
   .flags::before {
-    top: 4px;
-    height: 60px;
-    background-size: 208px 60px;
+    top: 6px;
+    height: 120px;
+    background-size: 208px 120px;
   }
 
   .flags::after {
-    top: 5px;
+    top: 7px;
   }
 
   .footer {
