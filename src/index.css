@@ -549,12 +549,12 @@ button {
 ========================= */
 
 .list-header {
-  padding: 28px 26px 0;
+  padding: 28px 26px 22px;
   background: var(--paper);
 }
 
 .list-section {
-  padding: 8px 26px 34px;
+  padding: 22px 26px 34px;
   border-top: 1px solid var(--line);
   background: var(--paper);
 }
