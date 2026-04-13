@@ -554,7 +554,8 @@ button {
 }
 
 .list-section {
-  padding: 22px 26px 34px;
+  margin-top: 22px;
+  padding: 0 26px 34px;
   border-top: 1px solid var(--line);
   background: var(--paper);
 }
