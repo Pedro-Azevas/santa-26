@@ -166,7 +166,7 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOrigin, setDragOrigin] = useState({ x: 0, y: 0 });
-  const [filtroAtivo, setFiltroAtivo] = useState({ tipo: 'todos', valor: 'todos' });
+  const [filtroAtivo, setFiltroAtivo] = useState({ tipo: 'todos', local: 'todos' });
   const [isMobilePopupOpen, setIsMobilePopupOpen] = useState(false);
 
   useEffect(() => {
@@ -261,11 +261,11 @@ export default function App() {
   }, [barracas]);
 
   const barracasFiltradas = useMemo(() => {
-    if (filtroAtivo.tipo === 'todos') return barracas;
-    if (filtroAtivo.tipo === 'local') {
-      return barracas.filter((item) => normalize(item.local) === normalize(filtroAtivo.valor));
-    }
-    return barracas.filter((item) => normalize(item.tipo) === normalize(filtroAtivo.valor));
+    return barracas.filter((item) => {
+      const tipoCombina = filtroAtivo.tipo === 'todos' || normalize(item.tipo) === normalize(filtroAtivo.tipo);
+      const localCombina = filtroAtivo.local === 'todos' || normalize(item.local) === normalize(filtroAtivo.local);
+      return tipoCombina && localCombina;
+    });
   }, [barracas, filtroAtivo]);
 
   const activeKey =
@@ -372,12 +372,32 @@ export default function App() {
     resetMapa();
   }
 
-  function handleChangeFiltro(tipo, valor = 'todos') {
-    setFiltroAtivo({ tipo, valor });
+  function resetInteracao() {
     setLockedKey(null);
     setHoveredKey(null);
     setIsMobilePopupOpen(false);
     resetMapa();
+  }
+
+  function handleResetFiltros() {
+    setFiltroAtivo({ tipo: 'todos', local: 'todos' });
+    resetInteracao();
+  }
+
+  function handleChangeTipoFiltro(tipo) {
+    setFiltroAtivo((current) => ({
+      ...current,
+      tipo: normalize(current.tipo) === normalize(tipo) ? 'todos' : tipo,
+    }));
+    resetInteracao();
+  }
+
+  function handleChangeLocalFiltro(local) {
+    setFiltroAtivo((current) => ({
+      ...current,
+      local: normalize(current.local) === normalize(local) ? 'todos' : local,
+    }));
+    resetInteracao();
   }
 
   return (
@@ -421,8 +441,10 @@ export default function App() {
             <div className="filtros-wrap">
               <button
                 type="button"
-                className={`filter-pill ${filtroAtivo.tipo === 'todos' ? 'is-active' : ''}`}
-                onClick={() => handleChangeFiltro('todos')}
+                className={`filter-pill ${
+                  filtroAtivo.tipo === 'todos' && filtroAtivo.local === 'todos' ? 'is-active' : ''
+                }`}
+                onClick={handleResetFiltros}
               >
                 Todos
               </button>
@@ -432,9 +454,9 @@ export default function App() {
                   key={`tipo-${tipo}`}
                   type="button"
                   className={`filter-pill ${
-                    filtroAtivo.tipo === 'tipo' && normalize(filtroAtivo.valor) === normalize(tipo) ? 'is-active' : ''
+                    normalize(filtroAtivo.tipo) === normalize(tipo) ? 'is-active' : ''
                   }`}
-                  onClick={() => handleChangeFiltro('tipo', tipo)}
+                  onClick={() => handleChangeTipoFiltro(tipo)}
                 >
                   {tipo}
                 </button>
@@ -445,9 +467,9 @@ export default function App() {
                   key={`local-${local}`}
                   type="button"
                   className={`filter-pill filter-pill-local ${
-                    filtroAtivo.tipo === 'local' && normalize(filtroAtivo.valor) === normalize(local) ? 'is-active' : ''
+                    normalize(filtroAtivo.local) === normalize(local) ? 'is-active' : ''
                   }`}
-                  onClick={() => handleChangeFiltro('local', local)}
+                  onClick={() => handleChangeLocalFiltro(local)}
                 >
                   {local}
                 </button>
