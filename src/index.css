@@ -146,7 +146,7 @@ button {
 
 .flags {
   position: relative;
-  height: 246px;
+  height: 186px;
   background: var(--paper);
   overflow: hidden;
 }
@@ -155,10 +155,10 @@ button {
   content: '';
   position: absolute;
   inset: 6px 0 auto;
-  height: 240px;
+  height: 180px;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='240' viewBox='0 0 208 240'%3E%3Cpath d='M0 0H52V240H50.7L26 130L1.3 240H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 0H104V240H102.7L78 130L53.3 240H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 0H156V240H154.7L130 130L105.3 240H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 0H208V240H206.7L182 130L157.3 240H156Z' fill='%23b69605'/%3E%3C/svg%3E")
-      repeat-x left top / 208px 240px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='180' viewBox='0 0 208 180'%3E%3Cpath d='M0 0H52V180H50.7L26 98L1.3 180H0Z' fill='%232f43ff'/%3E%3Cpath d='M52 0H104V180H102.7L78 98L53.3 180H52Z' fill='%23f5f1e9'/%3E%3Cpath d='M104 0H156V180H154.7L130 98L105.3 180H104Z' fill='%23aa2c20'/%3E%3Cpath d='M156 0H208V180H206.7L182 98L157.3 180H156Z' fill='%23b69605'/%3E%3C/svg%3E")
+      repeat-x left top / 208px 180px;
 }
 
 .flags::after {
@@ -911,13 +911,13 @@ button {
   }
 
   .flags {
-    height: 246px;
+    height: 186px;
   }
 
   .flags::before {
     top: 6px;
-    height: 240px;
-    background-size: 208px 240px;
+    height: 180px;
+    background-size: 208px 180px;
   }
 
   .flags::after {
