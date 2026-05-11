@@ -779,10 +779,21 @@ button {
     width: 100%;
   }
 
-  .hero-right,
+  .hero-right {
+    height: auto;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0 8px;
+  }
+
   .hero-photo-image {
-    height: min(76vh, 520px);
-    min-height: 360px;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    object-fit: contain;
+    object-position: center;
   }
 
   .hero-left .section-title {
