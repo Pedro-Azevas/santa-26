@@ -119,7 +119,7 @@ button {
   align-self: stretch;
   height: auto;
   min-height: clamp(430px, 43vw, 540px);
-  background: #c6beb4;
+  background: var(--paper);
   overflow: hidden;
 }
 
