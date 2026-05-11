@@ -6,7 +6,7 @@ const JSON_URL =
   'https://script.google.com/macros/s/AKfycbwBhHiWH7MTVLpRHQZ2pr48bo9n6C3V9IGcnQ2K0bZ3V-Zp5ewHgMJznE1yU-ns9I84/exec';
 
 const MAPA_URL = '/mapa-festa.jpeg';
-const HERO_URL = '/hero-festa-pb.jpg';
+const HERO_URL = '/hero-festa-pb.png';
 
 function normalize(value) {
   return String(value ?? '')
