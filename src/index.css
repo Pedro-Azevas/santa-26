@@ -806,6 +806,7 @@ button {
   }
 
   .hero-left .section-title {
+    display: block;
     order: 3;
     padding: 0 16px 22px;
   }
