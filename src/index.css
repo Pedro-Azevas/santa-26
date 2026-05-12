@@ -553,9 +553,6 @@ button {
   background: var(--paper);
 }
 
-.map-header {
-  padding-top: 80px;
-}
 
 .list-section {
   margin-top: 22px;
