@@ -770,12 +770,20 @@ button {
   }
 
   .hero-intro {
-    order: 1;
-    padding: 20px 16px 18px;
+    order: 2;
+    padding: 6px 16px 18px;
+  }
+
+  .hero-title {
+    display: none;
+  }
+
+  .hero-copy {
+    margin-top: 0;
   }
 
   .hero-right {
-    order: 2;
+    order: 1;
     width: 100%;
   }
 
