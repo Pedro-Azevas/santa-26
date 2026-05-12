@@ -425,13 +425,15 @@ export default function App() {
                 </p>
               </div>
             </div>
-
-            <div className="section-title">MAPA</div>
           </div>
 
           <div className="hero-right">
             <img src={HERO_URL} alt="Foto da festa junina" className="hero-photo-image" />
           </div>
+        </section>
+
+        <section className="map-header">
+          <div className="section-title">MAPA</div>
         </section>
 
         <div className="flags" />
