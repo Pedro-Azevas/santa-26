@@ -30,6 +30,15 @@ function getHorarioValue(row) {
   return String(row['HOR\u00c1RIO'] ?? row['HOR\u00c3\u0081RIO'] ?? row.HORARIO ?? '').trim();
 }
 
+function getTipoValue(row, nome) {
+  const normalizedName = normalize(nome);
+
+  if (normalizedName === 'bingo' || normalizedName === 'cafe do bingo') return 'BINGO';
+  if (normalizedName === 'barraca do san') return 'SAN';
+
+  return String(row.TIPO ?? '').trim();
+}
+
 function formatHorarioPart(value) {
   const clean = String(value ?? '').trim();
   const match = clean.match(/^(\d{1,2})(?::|h)?(\d{2})?$/i);
@@ -195,7 +204,7 @@ export default function App() {
       const id = Number(row.ID_BARRACA);
       const nome = String(row.NOME ?? '').trim();
       const local = String(row.LOCAL ?? '').trim();
-      const tipo = String(row.TIPO ?? '').trim();
+      const tipo = getTipoValue(row, nome);
       const horario = getHorarioValue(row);
       const link = String(row.LINK_FORMS ?? '').trim();
 
