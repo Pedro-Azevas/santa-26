@@ -175,7 +175,7 @@ button {
 ========================= */
 
 .map-section {
-  padding: 22px 26px 6px;
+  padding: 26px 26px 0;
   background: var(--paper);
 }
 
@@ -549,13 +549,13 @@ button {
 
 .map-header,
 .list-header {
-  padding: 28px 26px 22px;
+  padding: 26px;
   background: var(--paper);
 }
 
 
 .list-section {
-  margin-top: 22px;
+  margin-top: 26px;
   padding: 0 26px 34px;
   border-top: 1px solid var(--line);
   background: var(--paper);
