@@ -39,6 +39,13 @@ function getTipoValue(row, nome) {
   return String(row.TIPO ?? '').trim();
 }
 
+const LOCAL_ORDER = ['ef', 'pg', 'viveiro', 'em', 'ginasio', 'bc', 'campao'];
+
+function getLocalRank(local) {
+  const index = LOCAL_ORDER.indexOf(normalize(local));
+  return index === -1 ? LOCAL_ORDER.length : index;
+}
+
 function formatHorarioPart(value) {
   const clean = String(value ?? '').trim();
   const match = clean.match(/^(\d{1,2})(?::|h)?(\d{2})?$/i);
@@ -247,15 +254,13 @@ export default function App() {
         remanescentesTotal: item.horarios.reduce((acc, h) => acc + h.remanescentes, 0),
       }))
       .sort((a, b) => {
-        const tipoA = a.tipo || 'zzz';
-        const tipoB = b.tipo || 'zzz';
-        const tipoDiff = normalize(tipoA).localeCompare(normalize(tipoB));
-        if (tipoDiff !== 0) return tipoDiff;
+        const localDiff = getLocalRank(a.local) - getLocalRank(b.local);
+        if (localDiff !== 0) return localDiff;
 
-        const nameDiff = normalize(a.nome).localeCompare(normalize(b.nome));
+        const nameDiff = normalize(a.nome).localeCompare(normalize(b.nome), 'pt-BR');
         if (nameDiff !== 0) return nameDiff;
 
-        return normalize(a.local).localeCompare(normalize(b.local));
+        return normalize(a.tipo).localeCompare(normalize(b.tipo), 'pt-BR');
       });
   }, [data]);
 
