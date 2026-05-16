@@ -39,7 +39,7 @@ function getTipoValue(row, nome) {
   return String(row.TIPO ?? '').trim();
 }
 
-const LOCAL_ORDER = ['ef', 'pg', 'viveiro', 'em', 'ginasio', 'bc', 'campao'];
+const LOCAL_ORDER = ['ef', 'pg', 'viveiro', 'ginasio', 'em', 'bc', 'campao'];
 
 function getLocalRank(local) {
   const index = LOCAL_ORDER.indexOf(normalize(local));
