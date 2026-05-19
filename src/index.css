@@ -147,7 +147,7 @@ button {
   position: relative;
   height: 96px;
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: flex-start;
   padding-top: 8px;
   background: var(--paper);
@@ -161,7 +161,7 @@ button {
   right: 0;
   top: 8px;
   height: 1px;
-  background: rgba(125, 102, 77, 0.18);
+  background: rgba(125, 102, 77, 0.22);
 }
 
 .flag-pennant {
@@ -169,7 +169,16 @@ button {
   z-index: 1;
   flex: 0 0 42px;
   height: 68px;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
+  transform-origin: 50% 0;
+}
+
+.flag-pennant:nth-child(odd) {
+  transform: rotate(-1.5deg);
+}
+
+.flag-pennant:nth-child(even) {
+  transform: rotate(1.5deg) translateY(1px);
 }
 
 .flag-pennant:nth-child(5n + 1) {
