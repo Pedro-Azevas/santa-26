@@ -135,6 +135,7 @@ button {
   font-size: clamp(54px, 5.8vw, 74px);
   line-height: 1;
   letter-spacing: 0.075em;
+  color: var(--ink);
 }
 
 
