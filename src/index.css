@@ -1,7 +1,7 @@
 :root {
-  --page: #efe7df;
-  --paper: #ddd4c8;
-  --paper-soft: #e9e1d7;
+  --page: #ffe8c5;
+  --paper: #ffe8c5;
+  --paper-soft: #fff0d8;
   --paper-deep: #cbc2b7;
   --frame: #c6bdb1;
   --ink: #171717;
@@ -30,7 +30,7 @@ body,
 
 body {
   font-family: 'Avenir Next', 'Segoe UI', sans-serif;
-  background: linear-gradient(180deg, #f5efe7 0%, #ece4da 100%);
+  background: #ffe8c5;
   color: var(--ink);
 }
 
