@@ -146,27 +146,37 @@ button {
 .flags {
   position: relative;
   height: 96px;
-  background: var(--paper);
+  background:
+    linear-gradient(rgba(125, 102, 77, 0.18), rgba(125, 102, 77, 0.18)) left 7px / 100% 1px no-repeat,
+    var(--paper);
   overflow: hidden;
 }
-.flags::before {
-  content: '';
-  position: absolute;
-  inset: 6px 0 auto;
-  height: 90px;
-  background: url('/flags-bunting.svg') repeat-x left top / 260px 90px;
-}
 
-
-
+.flags::before,
 .flags::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  top: 7px;
-  height: 1px;
-  background: rgba(125, 102, 77, 0.18);
+  top: 6px;
+  height: 90px;
+}
+
+.flags::before {
+  background: repeating-linear-gradient(
+    90deg,
+    #f43aa5 0 52px,
+    #f0643f 52px 104px,
+    #dbe83d 104px 156px,
+    #22b7dd 156px 208px,
+    #39b99f 208px 260px
+  );
+}
+
+.flags::after {
+  background:
+    linear-gradient(62deg, transparent 0 49.5%, var(--paper) 50% 100%) left bottom / 52px 42px repeat-x,
+    linear-gradient(118deg, transparent 0 49.5%, var(--paper) 50% 100%) left bottom / 52px 42px repeat-x;
 }
 
 /* =========================
