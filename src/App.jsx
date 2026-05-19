@@ -95,6 +95,15 @@ function clampOffset(x, y, zoom) {
   };
 }
 
+function BuntingFlags() {
+  return (
+    <div className="flags" aria-hidden="true">
+      {Array.from({ length: 44 }, (_, index) => (
+        <span key={index} className="flag-pennant" />
+      ))}
+    </div>
+  );
+}
 function BarracaMarker({ active }) {
   return (
     <motion.div
@@ -450,7 +459,7 @@ export default function App() {
           <div className="section-title">MAPA</div>
         </section>
 
-        <div className="flags" />
+        <BuntingFlags />
 
         <section className="map-section">
           <div className="controls-bar">
@@ -576,7 +585,7 @@ export default function App() {
           <div className="section-title">LISTA</div>
         </section>
 
-        <div className="flags" />
+        <BuntingFlags />
 
         <section className="list-section">
           {loading && <div className="row-message">Carregando dados da planilha...</div>}
