@@ -150,11 +150,14 @@ button {
   overflow: hidden;
 }
 .flags::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 6px 0 auto;
   height: 90px;
-  background: url(/flags-bunting.svg) repeat-x left top / 260px 90px;
+  background-image: url(/flags-bunting.svg);
+  background-repeat: repeat-x;
+  background-position: left top;
+  background-size: 260px 90px;
 }
 
 
