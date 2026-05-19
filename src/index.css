@@ -146,22 +146,51 @@ button {
 .flags {
   position: relative;
   height: 96px;
-  background:
-    linear-gradient(rgba(125, 102, 77, 0.18), rgba(125, 102, 77, 0.18)) left 7px / 100% 1px no-repeat,
-    var(--paper);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding-top: 8px;
+  background: var(--paper);
   overflow: hidden;
 }
 
-.flags::before,
-.flags::after {
+.flags::before {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  top: 6px;
-  height: 90px;
+  top: 8px;
+  height: 1px;
+  background: rgba(125, 102, 77, 0.18);
 }
 
+.flag-pennant {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 42px;
+  height: 68px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.flag-pennant:nth-child(5n + 1) {
+  background: #f43aa5;
+}
+
+.flag-pennant:nth-child(5n + 2) {
+  background: #f0643f;
+}
+
+.flag-pennant:nth-child(5n + 3) {
+  background: #dbe83d;
+}
+
+.flag-pennant:nth-child(5n + 4) {
+  background: #22b7dd;
+}
+
+.flag-pennant:nth-child(5n) {
+  background: #39b99f;
+}
 .flags::before {
   background: repeating-linear-gradient(
     90deg,
