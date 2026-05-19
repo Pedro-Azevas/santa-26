@@ -154,7 +154,7 @@ button {
   position: absolute;
   inset: 6px 0 auto;
   height: 90px;
-  background: url(''/flags-bunting.svg'') repeat-x left top / 260px 90px;
+  background: url(/flags-bunting.svg) repeat-x left top / 260px 90px;
 }
 
 
