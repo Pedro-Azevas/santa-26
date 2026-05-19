@@ -150,14 +150,13 @@ button {
   overflow: hidden;
 }
 .flags::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 6px 0 auto;
   height: 90px;
-  background-image: url(/flags-bunting.svg);
-  background-repeat: repeat-x;
-  background-position: left top;
-  background-size: 260px 90px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='90' viewBox='0 0 208 90'%3E%3Cpath d='M0 0H52V90H50.7L26 49L1.3 90H0Z' fill='%23f43aa5'/%3E%3Cpath d='M52 0H104V90H102.7L78 49L53.3 90H52Z' fill='%23f0643f'/%3E%3Cpath d='M104 0H156V90H154.7L130 49L105.3 90H104Z' fill='%23dbe83d'/%3E%3Cpath d='M156 0H208V90H206.7L182 49L157.3 90H156Z' fill='%2322b7dd'/%3E%3C/svg%3E")
+      repeat-x left top / 208px 90px;
 }
 
 
