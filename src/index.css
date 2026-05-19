@@ -154,9 +154,7 @@ button {
   position: absolute;
   inset: 6px 0 auto;
   height: 90px;
-  background:
-    url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22260%22%20height=%2290%22%20viewBox=%220%200%20260%2090%22%3E%3Cpath%20d=%22M0%200H52V90H50.7L26%2049L1.3%2090H0Z%22%20fill=%22%23f43aa5%22/%3E%3Cpath%20d=%22M52%200H104V90H102.7L78%2049L53.3%2090H52Z%22%20fill=%22%23f0643f%22/%3E%3Cpath%20d=%22M104%200H156V90H154.7L130%2049L105.3%2090H104Z%22%20fill=%22%23dbe83d%22/%3E%3Cpath%20d=%22M156%200H208V90H206.7L182%2049L157.3%2090H156Z%22%20fill=%22%2322b7dd%22/%3E%3Cpath%20d=%22M208%200H260V90H258.7L234%2049L209.3%2090H208Z%22%20fill=%22%2339b99f%22/%3E%3C/svg%3E")
-      repeat-x left top / 260px 90px;
+  background: url(''/flags-bunting.svg'') repeat-x left top / 260px 90px;
 }
 
 
