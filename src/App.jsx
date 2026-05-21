@@ -199,7 +199,7 @@ export default function App() {
       try {
         setLoading(true);
         setError('');
-        const res = await fetch(JSON_URL);
+        const res = await fetch(`${JSON_URL}?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) throw new Error('N\u00e3o foi poss\u00edvel carregar a planilha do site.');
         const json = await res.json();
         setData(Array.isArray(json) ? json : []);
