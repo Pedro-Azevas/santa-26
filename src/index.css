@@ -139,7 +139,7 @@ button {
 }
 
 
-/* flags redeploy: 2026-05-19T20:04:08Z */
+/* flags redeploy: 2026-06-03 clean */
 /* =========================
    BANDEIRINHAS
 ========================= */
@@ -163,6 +163,7 @@ button {
   top: 8px;
   height: 1px;
   background: rgba(125, 102, 77, 0.22);
+  z-index: 2;
 }
 
 .flag-pennant {
@@ -201,26 +202,9 @@ button {
 .flag-pennant:nth-child(5n) {
   background: #39b99f;
 }
-.flags::before {
-  background: repeating-linear-gradient(
-    90deg,
-    #f43aa5 0 52px,
-    #f0643f 52px 104px,
-    #dbe83d 104px 156px,
-    #22b7dd 156px 208px,
-    #39b99f 208px 260px
-  );
-}
-
-.flags::after {
-  background:
-    linear-gradient(62deg, transparent 0 49.5%, var(--paper) 50% 100%) left bottom / 52px 42px repeat-x,
-    linear-gradient(118deg, transparent 0 49.5%, var(--paper) 50% 100%) left bottom / 52px 42px repeat-x;
-}
 
 /* =========================
-   CONTROLES
-========================= */
+   CONTROLES========================= */
 
 .map-section {
   padding: 26px 26px 0;
