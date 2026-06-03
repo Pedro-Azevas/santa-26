@@ -135,7 +135,6 @@ button {
   font-size: clamp(54px, 5.8vw, 74px);
   line-height: 1;
   letter-spacing: 0.075em;
-  color: var(--ink);
 }
 
 
@@ -147,75 +146,29 @@ button {
 .flags {
   position: relative;
   height: 96px;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding-top: 8px;
   background: var(--paper);
   overflow: hidden;
 }
-
 .flags::before {
+  content: '';
+  position: absolute;
+  inset: 6px 0 auto;
+  height: 90px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='90' viewBox='0 0 208 90'%3E%3Cpath d='M0 0H52V90H50.7L26 49L1.3 90H0Z' fill='%23f43aa5'/%3E%3Cpath d='M52 0H104V90H102.7L78 49L53.3 90H52Z' fill='%23f0643f'/%3E%3Cpath d='M104 0H156V90H154.7L130 49L105.3 90H104Z' fill='%23dbe83d'/%3E%3Cpath d='M156 0H208V90H206.7L182 49L157.3 90H156Z' fill='%2322b7dd'/%3E%3C/svg%3E")
+      repeat-x left top / 208px 90px;
+}
+
+
+
+.flags::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  top: 8px;
+  top: 7px;
   height: 1px;
-  background: rgba(125, 102, 77, 0.22);
-}
-
-.flag-pennant {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 42px;
-  height: 68px;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
-  transform-origin: 50% 0;
-}
-
-.flag-pennant:nth-child(odd) {
-  transform: rotate(-1.5deg);
-}
-
-.flag-pennant:nth-child(even) {
-  transform: rotate(1.5deg) translateY(1px);
-}
-
-.flag-pennant:nth-child(5n + 1) {
-  background: #f43aa5;
-}
-
-.flag-pennant:nth-child(5n + 2) {
-  background: #f0643f;
-}
-
-.flag-pennant:nth-child(5n + 3) {
-  background: #dbe83d;
-}
-
-.flag-pennant:nth-child(5n + 4) {
-  background: #22b7dd;
-}
-
-.flag-pennant:nth-child(5n) {
-  background: #39b99f;
-}
-.flags::before {
-  background: repeating-linear-gradient(
-    90deg,
-    #f43aa5 0 52px,
-    #f0643f 52px 104px,
-    #dbe83d 104px 156px,
-    #22b7dd 156px 208px,
-    #39b99f 208px 260px
-  );
-}
-
-.flags::after {
-  background:
-    linear-gradient(62deg, transparent 0 49.5%, var(--paper) 50% 100%) left bottom / 52px 42px repeat-x,
-    linear-gradient(118deg, transparent 0 49.5%, var(--paper) 50% 100%) left bottom / 52px 42px repeat-x;
+  background: rgba(125, 102, 77, 0.18);
 }
 
 /* =========================
@@ -688,6 +641,16 @@ button {
   justify-self: start;
   padding-left: 0;
   grid-column: 3;
+}
+
+.list-note {
+  flex: 1 0 100%;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
 
 .list-arrow {
