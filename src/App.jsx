@@ -61,7 +61,7 @@ function formatHorarioLabel(value) {
   const clean = String(value ?? '').replace(/\s+/g, ' ').trim();
   if (!clean) return '';
 
-  const parts = clean.split(/\s*[-–—]\s*/);
+  const parts = clean.split(/\s*[-â€“â€”]\s*/);
   if (parts.length === 2) {
     return `${formatHorarioPart(parts[0])} - ${formatHorarioPart(parts[1])}`;
   }
@@ -95,15 +95,6 @@ function clampOffset(x, y, zoom) {
   };
 }
 
-function BuntingFlags() {
-  return (
-    <div className="flags" aria-hidden="true">
-      {Array.from({ length: 44 }, (_, index) => (
-        <span key={index} className="flag-pennant" />
-      ))}
-    </div>
-  );
-}
 function BarracaMarker({ active }) {
   return (
     <motion.div
@@ -199,7 +190,7 @@ export default function App() {
       try {
         setLoading(true);
         setError('');
-        const res = await fetch(`${JSON_URL}?t=${Date.now()}`, { cache: 'no-store' });
+        const res = await fetch(JSON_URL);
         if (!res.ok) throw new Error('N\u00e3o foi poss\u00edvel carregar a planilha do site.');
         const json = await res.json();
         setData(Array.isArray(json) ? json : []);
@@ -459,7 +450,7 @@ export default function App() {
           <div className="section-title">MAPA</div>
         </section>
 
-        <BuntingFlags />
+        <div className="flags" />
 
         <section className="map-section">
           <div className="controls-bar">
@@ -585,7 +576,7 @@ export default function App() {
           <div className="section-title">LISTA</div>
         </section>
 
-        <BuntingFlags />
+        <div className="flags" />
 
         <section className="list-section">
           {loading && <div className="row-message">Carregando dados da planilha...</div>}
@@ -643,6 +634,8 @@ export default function App() {
                       <div className="list-slot-time">{'Sem hor\u00e1rios'}</div>
                     </div>
                   )}
+
+                  {normalize(barraca.nome) === 'bingo' ? <div className="list-note">somente adultos</div> : null}
                 </div>
 
                 <div className="list-arrow" aria-hidden="true">
