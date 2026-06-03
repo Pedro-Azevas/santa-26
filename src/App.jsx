@@ -7,6 +7,17 @@ const JSON_URL =
 
 const MAPA_URL = '/mapa-festa.jpeg';
 const HERO_URL = '/hero-festa-pb.png';
+const FLAG_COUNT = 44;
+
+function BuntingFlags() {
+  return (
+    <div className="flags" aria-hidden="true">
+      {Array.from({ length: FLAG_COUNT }, (_, index) => (
+        <span key={index} className="flag-pennant" />
+      ))}
+    </div>
+  );
+}
 
 function normalize(value) {
   return String(value ?? '')
@@ -450,7 +461,7 @@ export default function App() {
           <div className="section-title">MAPA</div>
         </section>
 
-        <div className="flags" />
+        <BuntingFlags />
 
         <section className="map-section">
           <div className="controls-bar">
@@ -576,7 +587,7 @@ export default function App() {
           <div className="section-title">LISTA</div>
         </section>
 
-        <div className="flags" />
+        <BuntingFlags />
 
         <section className="list-section">
           {loading && <div className="row-message">Carregando dados da planilha...</div>}
